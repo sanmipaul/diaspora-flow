@@ -41,5 +41,6 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         transfers[transferId] = Transfer({sender: msg.sender, recipient: recipient, amount: netAmount, timestamp: block.timestamp, memo: memo});
         sentTransfers[msg.sender].push(transferId);
         receivedTransfers[recipient].push(transferId);
+        emit TransferSent(transferId, msg.sender, recipient, netAmount, fee, memo);
     }
 }
