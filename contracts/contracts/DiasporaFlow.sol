@@ -49,4 +49,9 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         userSchedules[msg.sender].push(scheduleId);
         emit RecurringScheduled(scheduleId, msg.sender, recipient, amount, interval);
     }
+    function executeRecurring(uint256 scheduleId) external nonReentrant {
+        RecurringSchedule storage schedule = schedules[scheduleId];
+        require(schedule.active, "Schedule inactive");
+        require(block.timestamp >= schedule.nextExecution, "Too early");
+    }
 }
