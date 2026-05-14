@@ -53,5 +53,18 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         RecurringSchedule storage schedule = schedules[scheduleId];
         require(schedule.active, "Schedule inactive");
         require(block.timestamp >= schedule.nextExecution, "Too early");
+        uint256 amount = schedule.amount;
+        uint256 fee = (amount * FEE_BPS) / BPS_DENOMINATOR;
+        uint256 netAmount = amount - fee;
+        require(cUSD.transferFrom(schedule.sender, address(this), amount), "Transfer failed");
+        require(cUSD.transfer(schedule.recipient, netAmount), "Send failed");
+        collectedFees += fee;
+        schedule.nextExecution = block.timestamp + schedule.interval;
+        uint256 transferId = _transferCounter++;
+        transfers[transferId] = Transfer({sender: schedule.sender, recipient: schedule.recipient, amount: netAmount, timestamp: block.timestamp, memo: schedule.label});
+        sentTransfers[schedule.sender].push(transferId);
+        receivedTransfers[schedule.recipient].push(transferId);
+        emit RecurringExecuted(scheduleId, netAmount);
+        emit TransferSent(transferId, schedule.sender, schedule.recipient, netAmount, fee, schedule.label);
     }
 }
