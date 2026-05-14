@@ -9,8 +9,19 @@ export default function TransactionHistory() {
   const chainId = useChainId() as 42220 | 44787;
   const contractAddress = DIASPORA_FLOW_ADDRESS[chainId];
 
-  const { data: sentIds } = useReadContract({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "getSentTransfers", args: address ? [address] : undefined });
-  const { data: receivedIds } = useReadContract({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "getReceivedTransfers", args: address ? [address] : undefined });
+  const { data: sentIds } = useReadContract({
+    address: contractAddress || undefined,
+    abi: DIASPORA_FLOW_ABI,
+    functionName: "getSentTransfers",
+    args: address ? [address] : undefined,
+  });
+
+  const { data: receivedIds } = useReadContract({
+    address: contractAddress || undefined,
+    abi: DIASPORA_FLOW_ABI,
+    functionName: "getReceivedTransfers",
+    args: address ? [address] : undefined,
+  });
 
   const allIds = [...(sentIds ?? []), ...(receivedIds ?? [])].filter((v, i, a) => a.indexOf(v) === i);
 
@@ -31,7 +42,12 @@ export default function TransactionHistory() {
 }
 
 function TransferRow({ transferId, contractAddress, userAddress }: { transferId: bigint; contractAddress: `0x${string}`; userAddress: string }) {
-  const { data } = useReadContract({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "transfers", args: [transferId] });
+  const { data } = useReadContract({
+    address: contractAddress || undefined,
+    abi: DIASPORA_FLOW_ABI,
+    functionName: "transfers",
+    args: [transferId],
+  });
 
   if (!data) return null;
 
