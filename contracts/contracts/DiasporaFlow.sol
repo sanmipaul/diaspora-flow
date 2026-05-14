@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-
 contract DiasporaFlow is Ownable, ReentrancyGuard {
     IERC20 public immutable cUSD;
     uint256 public constant FEE_BPS = 30;
@@ -28,7 +26,6 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
     event FamilyMemberAdded(address indexed user, address wallet, string name);
     event FamilyMemberRemoved(address indexed user, uint256 index);
     constructor(address _cUSD) Ownable(msg.sender) { cUSD = IERC20(_cUSD); }
-
     function send(address recipient, uint256 amount, string calldata memo) external nonReentrant returns (uint256 transferId) {
         require(recipient != address(0), "Invalid recipient");
         require(amount > 0, "Amount must be > 0");
@@ -43,10 +40,13 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         receivedTransfers[recipient].push(transferId);
         emit TransferSent(transferId, msg.sender, recipient, netAmount, fee, memo);
     }
-
     function scheduleRecurring(address recipient, uint256 amount, uint256 interval, string calldata label) external returns (uint256 scheduleId) {
         require(recipient != address(0), "Invalid recipient");
         require(amount > 0, "Amount must be > 0");
         require(interval >= 1 days, "Interval too short");
+        scheduleId = _scheduleCounter++;
+        schedules[scheduleId] = RecurringSchedule({sender: msg.sender, recipient: recipient, amount: amount, interval: interval, nextExecution: block.timestamp + interval, active: true, label: label});
+        userSchedules[msg.sender].push(scheduleId);
+        emit RecurringScheduled(scheduleId, msg.sender, recipient, amount, interval);
     }
 }
