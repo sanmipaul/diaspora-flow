@@ -68,4 +68,8 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
     event RecurringCancelled(uint256 indexed scheduleId);
     event FamilyMemberAdded(address indexed user, address wallet, string name);
     event FamilyMemberRemoved(address indexed user, uint256 index);
+
+    constructor(address _cUSD) Ownable(msg.sender) {
+        cUSD = IERC20(_cUSD);
+    }
 }
