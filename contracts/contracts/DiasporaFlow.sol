@@ -38,5 +38,8 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         require(amount > 0, "Amount must be > 0");
         uint256 fee = (amount * FEE_BPS) / BPS_DENOMINATOR;
         uint256 netAmount = amount - fee;
+        require(cUSD.transferFrom(msg.sender, address(this), amount), "Transfer failed");
+        require(cUSD.transfer(recipient, netAmount), "Send failed");
+        collectedFees += fee;
     }
 }
