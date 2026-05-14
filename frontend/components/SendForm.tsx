@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAccount, useChainId, useReadContract } from "wagmi";
-import { formatUnits } from "viem";
+import { parseUnits, formatUnits } from "viem";
 import { DIASPORA_FLOW_ADDRESS, CUSD_ADDRESS, ERC20_ABI } from "@/lib/contracts";
 
 export default function SendForm() {
@@ -22,6 +22,9 @@ export default function SendForm() {
     args: address ? [address] : undefined,
   });
 
+  const parsedAmount = amount ? parseUnits(amount, 18) : 0n;
+  const fee = parsedAmount ? (parsedAmount * 30n) / 10000n : 0n;
+  const netAmount = parsedAmount ? parsedAmount - fee : 0n;
   const formattedBalance = balance ? Number(formatUnits(balance, 18)).toFixed(2) : "0.00";
 
   return (
@@ -33,35 +36,32 @@ export default function SendForm() {
 
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Recipient address</label>
-        <input
-          value={recipient}
-          onChange={(e) => setRecipient(e.target.value)}
-          placeholder="0x..."
-          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-        />
+        <input value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="0x..."
+          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
       </div>
-
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Amount (cUSD)</label>
-        <input
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="0.00"
-          type="number"
-          min="0"
-          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-        />
+        <input value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" type="number" min="0"
+          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
       </div>
-
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Memo (optional)</label>
-        <input
-          value={memo}
-          onChange={(e) => setMemo(e.target.value)}
-          placeholder="School fees, rent..."
-          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-        />
+        <input value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="School fees, rent..."
+          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
       </div>
+
+      {parsedAmount > 0n && (
+        <div className="bg-gray-50 rounded-xl p-3 space-y-1 text-xs">
+          <div className="flex justify-between text-gray-500">
+            <span>Fee (0.3%)</span>
+            <span>{Number(formatUnits(fee, 18)).toFixed(4)} cUSD</span>
+          </div>
+          <div className="flex justify-between font-semibold text-gray-800">
+            <span>Recipient receives</span>
+            <span>{Number(formatUnits(netAmount, 18)).toFixed(4)} cUSD</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
