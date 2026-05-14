@@ -1,8 +1,6 @@
 # DiasporaFlow
 
-Cross-border remittance MiniPay mini app.
-
-Send cUSD to family at 0.3% fee vs 8–9% traditional.
+Cross-border remittance MiniPay mini app. Send cUSD to family at 0.3% fee vs 8–9% traditional.
 
 ## Features
 - Send cUSD to any wallet with transparent fee breakdown
@@ -29,9 +27,13 @@ npm run deploy:alfajores
 ```bash
 cd frontend
 npm install
+# paste deployed address into frontend/lib/contracts.ts
 npm run dev
 ```
 
 ## Contract
 `DiasporaFlow.sol` handles transfers, recurring schedules, and family member registry.
 cUSD: `0x765DE816845861e75A25fCA122bb6898B8B1282a` (mainnet)
+
+## Deployment Notes
+After deploying the contract, update `DIASPORA_FLOW_ADDRESS` in `frontend/lib/contracts.ts` with the deployed address.
