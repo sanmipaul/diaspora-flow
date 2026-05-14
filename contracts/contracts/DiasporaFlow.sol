@@ -82,4 +82,13 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         familyMembers[msg.sender][index].active = false;
         emit FamilyMemberRemoved(msg.sender, index);
     }
+    function getFamilyMembers(address user) external view returns (FamilyMember[] memory) { return familyMembers[user]; }
+    function getSentTransfers(address user) external view returns (uint256[] memory) { return sentTransfers[user]; }
+    function getReceivedTransfers(address user) external view returns (uint256[] memory) { return receivedTransfers[user]; }
+    function getUserSchedules(address user) external view returns (uint256[] memory) { return userSchedules[user]; }
+    function withdrawFees() external onlyOwner {
+        uint256 amount = collectedFees;
+        collectedFees = 0;
+        require(cUSD.transfer(owner(), amount), "Withdraw failed");
+    }
 }
