@@ -30,6 +30,38 @@ export default function SendForm() {
         <span>Available balance</span>
         <span className="font-medium text-gray-800">{formattedBalance} cUSD</span>
       </div>
+
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">Recipient address</label>
+        <input
+          value={recipient}
+          onChange={(e) => setRecipient(e.target.value)}
+          placeholder="0x..."
+          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">Amount (cUSD)</label>
+        <input
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="0.00"
+          type="number"
+          min="0"
+          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">Memo (optional)</label>
+        <input
+          value={memo}
+          onChange={(e) => setMemo(e.target.value)}
+          placeholder="School fees, rent..."
+          className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        />
+      </div>
     </div>
   );
 }
