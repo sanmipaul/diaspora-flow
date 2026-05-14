@@ -84,7 +84,7 @@ export default function SendForm() {
           <div className="flex justify-between font-semibold text-gray-800"><span>Recipient receives</span><span>{Number(formatUnits(netAmount, 18)).toFixed(4)} cUSD</span></div>
         </div>
       )}
-      <button onClick={handleSend} disabled={!recipient || !amount || step === "approving" || step === "sending"}
+      <button onClick={handleSend} disabled={!recipient || !amount || !contractAddress || step === "approving" || step === "sending"}
         className="w-full py-3 bg-brand-600 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
         {step === "approving" ? "Approving..." : step === "sending" ? "Sending..." : allowance && allowance >= parsedAmount ? "Send" : "Approve & Send"}
       </button>
