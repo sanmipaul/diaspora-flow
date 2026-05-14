@@ -8,6 +8,13 @@ const config: HardhatUserConfig = {
     version: "0.8.20",
     settings: { optimizer: { enabled: true, runs: 200 } },
   },
+  networks: {
+    alfajores: {
+      url: "https://alfajores-forno.celo-testnet.org",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 44787,
+    },
+  },
 };
 
 export default config;
