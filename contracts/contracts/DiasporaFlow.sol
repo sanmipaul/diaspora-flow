@@ -73,4 +73,13 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         schedule.active = false;
         emit RecurringCancelled(scheduleId);
     }
+    function addFamilyMember(address wallet, string calldata name, string calldata relation) external {
+        familyMembers[msg.sender].push(FamilyMember({wallet: wallet, name: name, relation: relation, active: true}));
+        emit FamilyMemberAdded(msg.sender, wallet, name);
+    }
+    function removeFamilyMember(uint256 index) external {
+        require(index < familyMembers[msg.sender].length, "Invalid index");
+        familyMembers[msg.sender][index].active = false;
+        emit FamilyMemberRemoved(msg.sender, index);
+    }
 }
