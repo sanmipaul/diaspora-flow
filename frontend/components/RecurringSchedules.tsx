@@ -22,7 +22,7 @@ export default function RecurringSchedules() {
   const [intervalIdx, setIntervalIdx] = useState(2);
 
   const { data: scheduleIds } = useReadContract({
-    address: contractAddress,
+    address: contractAddress || undefined,
     abi: DIASPORA_FLOW_ABI,
     functionName: "getUserSchedules",
     args: address ? [address] : undefined,
@@ -77,7 +77,12 @@ export default function RecurringSchedules() {
 }
 
 function ScheduleCard({ scheduleId, contractAddress, onCancel }: { scheduleId: bigint; contractAddress: `0x${string}`; onCancel: () => void }) {
-  const { data } = useReadContract({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "schedules", args: [scheduleId] });
+  const { data } = useReadContract({
+    address: contractAddress || undefined,
+    abi: DIASPORA_FLOW_ABI,
+    functionName: "schedules",
+    args: [scheduleId],
+  });
 
   if (!data || !data[5]) return null;
 
