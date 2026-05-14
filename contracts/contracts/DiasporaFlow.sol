@@ -67,4 +67,10 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         emit RecurringExecuted(scheduleId, netAmount);
         emit TransferSent(transferId, schedule.sender, schedule.recipient, netAmount, fee, schedule.label);
     }
+    function cancelRecurring(uint256 scheduleId) external {
+        RecurringSchedule storage schedule = schedules[scheduleId];
+        require(schedule.sender == msg.sender, "Not owner");
+        schedule.active = false;
+        emit RecurringCancelled(scheduleId);
+    }
 }
