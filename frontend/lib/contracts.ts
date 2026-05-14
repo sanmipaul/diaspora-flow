@@ -169,3 +169,4 @@ export const ERC20_ABI = [
     outputs: [{ name: "", type: "uint8" }],
   },
 ] as const;
+// removed duplicate entry — ABI already exported above
