@@ -14,7 +14,7 @@ export default function FamilyProfiles() {
   const [relation, setRelation] = useState("");
 
   const { data: members, refetch } = useReadContract({
-    address: contractAddress,
+    address: contractAddress || undefined,
     abi: DIASPORA_FLOW_ABI,
     functionName: "getFamilyMembers",
     args: address ? [address] : undefined,
