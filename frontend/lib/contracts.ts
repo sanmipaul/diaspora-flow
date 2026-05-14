@@ -20,4 +20,30 @@ export const DIASPORA_FLOW_ABI = [
     ],
     outputs: [{ name: "transferId", type: "uint256" }],
   },
+  {
+    name: "scheduleRecurring",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "recipient", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "interval", type: "uint256" },
+      { name: "label", type: "string" },
+    ],
+    outputs: [{ name: "scheduleId", type: "uint256" }],
+  },
+  {
+    name: "cancelRecurring",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "scheduleId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "executeRecurring",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "scheduleId", type: "uint256" }],
+    outputs: [],
+  },
 ] as const;
