@@ -103,4 +103,32 @@ export const DIASPORA_FLOW_ABI = [
     inputs: [{ name: "user", type: "address" }],
     outputs: [{ name: "", type: "uint256[]" }],
   },
+  {
+    name: "transfers",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "uint256" }],
+    outputs: [
+      { name: "sender", type: "address" },
+      { name: "recipient", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "timestamp", type: "uint256" },
+      { name: "memo", type: "string" },
+    ],
+  },
+  {
+    name: "schedules",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "uint256" }],
+    outputs: [
+      { name: "sender", type: "address" },
+      { name: "recipient", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "interval", type: "uint256" },
+      { name: "nextExecution", type: "uint256" },
+      { name: "active", type: "bool" },
+      { name: "label", type: "string" },
+    ],
+  },
 ] as const;
