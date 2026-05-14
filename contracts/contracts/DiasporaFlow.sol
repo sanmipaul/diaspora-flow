@@ -27,4 +27,12 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         string relation;
         bool active;
     }
+
+    struct Transfer {
+        address sender;
+        address recipient;
+        uint256 amount;
+        uint256 timestamp;
+        string memo;
+    }
 }
