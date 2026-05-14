@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount, useChainId, useReadContract } from "wagmi";
+import { useAccount, useChainId, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
-import { DIASPORA_FLOW_ADDRESS, CUSD_ADDRESS, ERC20_ABI } from "@/lib/contracts";
+import { DIASPORA_FLOW_ADDRESS, DIASPORA_FLOW_ABI, CUSD_ADDRESS, ERC20_ABI } from "@/lib/contracts";
 
 export default function SendForm() {
   const { address } = useAccount();
@@ -11,21 +11,30 @@ export default function SendForm() {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [memo, setMemo] = useState("");
+  const [step, setStep] = useState<"idle" | "approving" | "sending" | "done">("idle");
 
   const contractAddress = DIASPORA_FLOW_ADDRESS[chainId];
   const cUSD = CUSD_ADDRESS[chainId] as `0x${string}`;
 
-  const { data: balance } = useReadContract({
-    address: cUSD,
-    abi: ERC20_ABI,
-    functionName: "balanceOf",
-    args: address ? [address] : undefined,
-  });
+  const { data: balance } = useReadContract({ address: cUSD, abi: ERC20_ABI, functionName: "balanceOf", args: address ? [address] : undefined });
+  const { data: allowance } = useReadContract({ address: cUSD, abi: ERC20_ABI, functionName: "allowance", args: address && contractAddress ? [address, contractAddress] : undefined });
+
+  const { writeContract: approve, data: approveTx } = useWriteContract();
+  const { isSuccess: approveSuccess } = useWaitForTransactionReceipt({ hash: approveTx });
 
   const parsedAmount = amount ? parseUnits(amount, 18) : 0n;
   const fee = parsedAmount ? (parsedAmount * 30n) / 10000n : 0n;
   const netAmount = parsedAmount ? parsedAmount - fee : 0n;
   const formattedBalance = balance ? Number(formatUnits(balance, 18)).toFixed(2) : "0.00";
+
+  function handleSend() {
+    if (!recipient || !parsedAmount || !contractAddress) return;
+    if (!allowance || allowance < parsedAmount) {
+      setStep("approving");
+      approve({ address: cUSD, abi: ERC20_ABI, functionName: "approve", args: [contractAddress, parsedAmount] });
+      return;
+    }
+  }
 
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
@@ -33,7 +42,6 @@ export default function SendForm() {
         <span>Available balance</span>
         <span className="font-medium text-gray-800">{formattedBalance} cUSD</span>
       </div>
-
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Recipient address</label>
         <input value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="0x..."
@@ -49,19 +57,16 @@ export default function SendForm() {
         <input value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="School fees, rent..."
           className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
       </div>
-
       {parsedAmount > 0n && (
         <div className="bg-gray-50 rounded-xl p-3 space-y-1 text-xs">
-          <div className="flex justify-between text-gray-500">
-            <span>Fee (0.3%)</span>
-            <span>{Number(formatUnits(fee, 18)).toFixed(4)} cUSD</span>
-          </div>
-          <div className="flex justify-between font-semibold text-gray-800">
-            <span>Recipient receives</span>
-            <span>{Number(formatUnits(netAmount, 18)).toFixed(4)} cUSD</span>
-          </div>
+          <div className="flex justify-between text-gray-500"><span>Fee (0.3%)</span><span>{Number(formatUnits(fee, 18)).toFixed(4)} cUSD</span></div>
+          <div className="flex justify-between font-semibold text-gray-800"><span>Recipient receives</span><span>{Number(formatUnits(netAmount, 18)).toFixed(4)} cUSD</span></div>
         </div>
       )}
+      <button onClick={handleSend} disabled={!recipient || !amount || step === "approving" || step === "sending"}
+        className="w-full py-3 bg-brand-600 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+        {step === "approving" ? "Approving..." : allowance && allowance >= parsedAmount ? "Send" : "Approve & Send"}
+      </button>
     </div>
   );
 }
