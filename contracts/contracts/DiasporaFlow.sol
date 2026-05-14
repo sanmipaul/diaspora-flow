@@ -43,4 +43,10 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         receivedTransfers[recipient].push(transferId);
         emit TransferSent(transferId, msg.sender, recipient, netAmount, fee, memo);
     }
+
+    function scheduleRecurring(address recipient, uint256 amount, uint256 interval, string calldata label) external returns (uint256 scheduleId) {
+        require(recipient != address(0), "Invalid recipient");
+        require(amount > 0, "Amount must be > 0");
+        require(interval >= 1 days, "Interval too short");
+    }
 }
