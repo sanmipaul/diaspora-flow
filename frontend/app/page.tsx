@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { useAccount } from "wagmi";
+import SendForm from "@/components/SendForm";
+import FamilyProfiles from "@/components/FamilyProfiles";
+import RecurringSchedules from "@/components/RecurringSchedules";
+import TransactionHistory from "@/components/TransactionHistory";
 
 type Tab = "send" | "family" | "recurring" | "history";
 
@@ -55,6 +59,11 @@ export default function Home() {
           </button>
         ))}
       </nav>
+
+      {activeTab === "send" && <SendForm />}
+      {activeTab === "family" && <FamilyProfiles />}
+      {activeTab === "recurring" && <RecurringSchedules />}
+      {activeTab === "history" && <TransactionHistory />}
     </div>
   );
 }
