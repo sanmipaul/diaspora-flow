@@ -29,11 +29,7 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
     event FamilyMemberRemoved(address indexed user, uint256 index);
     constructor(address _cUSD) Ownable(msg.sender) { cUSD = IERC20(_cUSD); }
 
-    function send(
-        address recipient,
-        uint256 amount,
-        string calldata memo
-    ) external nonReentrant returns (uint256 transferId) {
+    function send(address recipient, uint256 amount, string calldata memo) external nonReentrant returns (uint256 transferId) {
         require(recipient != address(0), "Invalid recipient");
         require(amount > 0, "Amount must be > 0");
         uint256 fee = (amount * FEE_BPS) / BPS_DENOMINATOR;
@@ -41,5 +37,9 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         require(cUSD.transferFrom(msg.sender, address(this), amount), "Transfer failed");
         require(cUSD.transfer(recipient, netAmount), "Send failed");
         collectedFees += fee;
+        transferId = _transferCounter++;
+        transfers[transferId] = Transfer({sender: msg.sender, recipient: recipient, amount: netAmount, timestamp: block.timestamp, memo: memo});
+        sentTransfers[msg.sender].push(transferId);
+        receivedTransfers[recipient].push(transferId);
     }
 }
