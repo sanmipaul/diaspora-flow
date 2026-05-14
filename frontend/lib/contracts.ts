@@ -46,4 +46,40 @@ export const DIASPORA_FLOW_ABI = [
     inputs: [{ name: "scheduleId", type: "uint256" }],
     outputs: [],
   },
+  {
+    name: "addFamilyMember",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "wallet", type: "address" },
+      { name: "name", type: "string" },
+      { name: "relation", type: "string" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "removeFamilyMember",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "index", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "getFamilyMembers",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "user", type: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "tuple[]",
+        components: [
+          { name: "wallet", type: "address" },
+          { name: "name", type: "string" },
+          { name: "relation", type: "string" },
+          { name: "active", type: "bool" },
+        ],
+      },
+    ],
+  },
 ] as const;
