@@ -20,12 +20,20 @@ export default function SendForm() {
   const { data: allowance } = useReadContract({ address: cUSD, abi: ERC20_ABI, functionName: "allowance", args: address && contractAddress ? [address, contractAddress] : undefined });
 
   const { writeContract: approve, data: approveTx } = useWriteContract();
+  const { writeContract: send, data: sendTx } = useWriteContract();
   const { isSuccess: approveSuccess } = useWaitForTransactionReceipt({ hash: approveTx });
+  const { isSuccess: sendSuccess } = useWaitForTransactionReceipt({ hash: sendTx });
 
   const parsedAmount = amount ? parseUnits(amount, 18) : 0n;
   const fee = parsedAmount ? (parsedAmount * 30n) / 10000n : 0n;
   const netAmount = parsedAmount ? parsedAmount - fee : 0n;
   const formattedBalance = balance ? Number(formatUnits(balance, 18)).toFixed(2) : "0.00";
+
+  function executeSend() {
+    if (!contractAddress) return;
+    setStep("sending");
+    send({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "send", args: [recipient as `0x${string}`, parsedAmount, memo] });
+  }
 
   function handleSend() {
     if (!recipient || !parsedAmount || !contractAddress) return;
@@ -34,6 +42,19 @@ export default function SendForm() {
       approve({ address: cUSD, abi: ERC20_ABI, functionName: "approve", args: [contractAddress, parsedAmount] });
       return;
     }
+    executeSend();
+  }
+
+  if (sendSuccess) {
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
+        <div className="text-4xl mb-3">✓</div>
+        <p className="font-semibold text-brand-700 text-lg mb-1">Transfer sent!</p>
+        <p className="text-sm text-gray-500 mb-4">{Number(formatUnits(netAmount, 18)).toFixed(2)} cUSD received by recipient.</p>
+        <button onClick={() => { setStep("idle"); setAmount(""); setRecipient(""); setMemo(""); }}
+          className="w-full py-3 bg-brand-600 text-white rounded-xl font-medium">Send another</button>
+      </div>
+    );
   }
 
   return (
@@ -65,8 +86,11 @@ export default function SendForm() {
       )}
       <button onClick={handleSend} disabled={!recipient || !amount || step === "approving" || step === "sending"}
         className="w-full py-3 bg-brand-600 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
-        {step === "approving" ? "Approving..." : allowance && allowance >= parsedAmount ? "Send" : "Approve & Send"}
+        {step === "approving" ? "Approving..." : step === "sending" ? "Sending..." : allowance && allowance >= parsedAmount ? "Send" : "Approve & Send"}
       </button>
+      {approveSuccess && step === "approving" && (
+        <button onClick={executeSend} className="w-full py-3 bg-brand-700 text-white rounded-xl font-semibold">Now send →</button>
+      )}
     </div>
   );
 }
