@@ -29,16 +29,12 @@ export default function RecurringSchedules() {
   });
 
   const { writeContract: schedule } = useWriteContract();
+  const { writeContract: cancel } = useWriteContract();
 
   function handleCreate() {
     if (!recipient || !amount || !contractAddress) return;
     setAdding(false);
-    schedule({
-      address: contractAddress,
-      abi: DIASPORA_FLOW_ABI,
-      functionName: "scheduleRecurring",
-      args: [recipient as `0x${string}`, parseUnits(amount, 18), BigInt(INTERVALS[intervalIdx].seconds), label],
-    });
+    schedule({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "scheduleRecurring", args: [recipient as `0x${string}`, parseUnits(amount, 18), BigInt(INTERVALS[intervalIdx].seconds), label] });
   }
 
   return (
@@ -71,6 +67,31 @@ export default function RecurringSchedules() {
       {(!scheduleIds || scheduleIds.length === 0) && !adding && (
         <div className="bg-white rounded-2xl p-6 text-center text-gray-400 text-sm shadow-sm">No recurring schedules set up.</div>
       )}
+
+      {scheduleIds?.map((id) => (
+        <ScheduleCard key={id.toString()} scheduleId={id} contractAddress={contractAddress}
+          onCancel={() => contractAddress && cancel({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "cancelRecurring", args: [id] })} />
+      ))}
+    </div>
+  );
+}
+
+function ScheduleCard({ scheduleId, contractAddress, onCancel }: { scheduleId: bigint; contractAddress: `0x${string}`; onCancel: () => void }) {
+  const { data } = useReadContract({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "schedules", args: [scheduleId] });
+
+  if (!data || !data[5]) return null;
+
+  const nextDate = new Date(Number(data[4]) * 1000).toLocaleDateString();
+  const amountDisplay = (Number(data[2]) / 1e18).toFixed(2);
+
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
+      <div>
+        <p className="font-medium text-gray-800">{data[6] || "Unnamed"}</p>
+        <p className="text-xs text-gray-400">{amountDisplay} cUSD</p>
+        <p className="text-xs text-gray-400">Next: {nextDate}</p>
+      </div>
+      <button onClick={onCancel} className="text-xs text-red-400">Cancel</button>
     </div>
   );
 }
