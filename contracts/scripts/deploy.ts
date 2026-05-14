@@ -8,7 +8,11 @@ async function main() {
   console.log("Deploying with:", deployer.address);
 
   const cUSD = network.name === "celo" ? CUSD_MAINNET : CUSD_ALFAJORES;
-  console.log("Using cUSD:", cUSD);
+  const DiasporaFlow = await ethers.getContractFactory("DiasporaFlow");
+  const contract = await DiasporaFlow.deploy(cUSD);
+  await contract.waitForDeployment();
+
+  console.log("DiasporaFlow deployed to:", await contract.getAddress());
 }
 
 main().catch((error) => {
