@@ -42,4 +42,10 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
     mapping(uint256 => RecurringSchedule) public schedules;
     mapping(address => uint256[]) public userSchedules;
     mapping(address => FamilyMember[]) public familyMembers;
+
+    mapping(uint256 => Transfer) public transfers;
+    mapping(address => uint256[]) public sentTransfers;
+    mapping(address => uint256[]) public receivedTransfers;
+
+    uint256 public collectedFees;
 }
