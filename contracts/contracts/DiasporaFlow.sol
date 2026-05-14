@@ -8,6 +8,16 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 contract DiasporaFlow is Ownable, ReentrancyGuard {
     IERC20 public immutable cUSD;
 
-    uint256 public constant FEE_BPS = 30; // 0.3%
+    uint256 public constant FEE_BPS = 30;
     uint256 public constant BPS_DENOMINATOR = 10000;
+
+    struct RecurringSchedule {
+        address sender;
+        address recipient;
+        uint256 amount;
+        uint256 interval;
+        uint256 nextExecution;
+        bool active;
+        string label;
+    }
 }
