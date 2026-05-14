@@ -7,3 +7,17 @@ export const DIASPORA_FLOW_ADDRESS = {
   42220: "" as `0x${string}`,
   44787: "" as `0x${string}`,
 } as const;
+
+export const DIASPORA_FLOW_ABI = [
+  {
+    name: "send",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "recipient", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "memo", type: "string" },
+    ],
+    outputs: [{ name: "transferId", type: "uint256" }],
+  },
+] as const;
