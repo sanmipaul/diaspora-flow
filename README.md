@@ -31,3 +31,7 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## Contract
+`DiasporaFlow.sol` handles transfers, recurring schedules, and family member registry.
+cUSD: `0x765DE816845861e75A25fCA122bb6898B8B1282a` (mainnet)
