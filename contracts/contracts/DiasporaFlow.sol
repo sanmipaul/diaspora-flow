@@ -20,4 +20,11 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
         bool active;
         string label;
     }
+
+    struct FamilyMember {
+        address wallet;
+        string name;
+        string relation;
+        bool active;
+    }
 }
