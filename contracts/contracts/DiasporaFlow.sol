@@ -11,6 +11,9 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
     uint256 public constant FEE_BPS = 30;
     uint256 public constant BPS_DENOMINATOR = 10000;
 
+    uint256 private _scheduleCounter;
+    uint256 private _transferCounter;
+
     struct RecurringSchedule {
         address sender;
         address recipient;
