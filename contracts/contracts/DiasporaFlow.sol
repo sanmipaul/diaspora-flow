@@ -36,5 +36,7 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
     ) external nonReentrant returns (uint256 transferId) {
         require(recipient != address(0), "Invalid recipient");
         require(amount > 0, "Amount must be > 0");
+        uint256 fee = (amount * FEE_BPS) / BPS_DENOMINATOR;
+        uint256 netAmount = amount - fee;
     }
 }
