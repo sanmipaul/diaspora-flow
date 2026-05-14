@@ -1,17 +1,17 @@
 # DiasporaFlow
 
-Cross-border remittance MiniPay mini app. Send cUSD to family at 0.3% fee vs 8–9% traditional.
+Cross-border remittance MiniPay mini app. Send cUSD to family at **0.3% fee** vs 8–9% traditional.
 
 ## Features
 - Send cUSD to any wallet with transparent fee breakdown
 - Family profiles for quick repeat transfers
 - Recurring/scheduled transfers (weekly, bi-weekly, monthly)
-- Full transaction history
+- Full transaction history with sent/received view
 
 ## Stack
-- Next.js 14 + TypeScript + TailwindCSS
-- Wagmi v2 + viem (Celo chain)
-- Solidity (Hardhat) smart contract
+- **Frontend:** Next.js 14 + TypeScript + TailwindCSS
+- **Web3:** Wagmi v2 + viem (Celo chain)
+- **Contract:** Solidity 0.8.20 + Hardhat + OpenZeppelin
 
 ## Setup
 
@@ -33,7 +33,11 @@ npm run dev
 
 ## Contract
 `DiasporaFlow.sol` handles transfers, recurring schedules, and family member registry.
-cUSD: `0x765DE816845861e75A25fCA122bb6898B8B1282a` (mainnet)
 
-## Deployment Notes
-After deploying the contract, update `DIASPORA_FLOW_ADDRESS` in `frontend/lib/contracts.ts` with the deployed address.
+| Network | cUSD address |
+|---------|-------------|
+| Celo mainnet | `0x765DE816845861e75A25fCA122bb6898B8B1282a` |
+| Alfajores | `0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1` |
+
+## License
+MIT
