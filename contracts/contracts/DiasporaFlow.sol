@@ -48,4 +48,24 @@ contract DiasporaFlow is Ownable, ReentrancyGuard {
     mapping(address => uint256[]) public receivedTransfers;
 
     uint256 public collectedFees;
+
+    event TransferSent(
+        uint256 indexed transferId,
+        address indexed sender,
+        address indexed recipient,
+        uint256 amount,
+        uint256 fee,
+        string memo
+    );
+    event RecurringScheduled(
+        uint256 indexed scheduleId,
+        address indexed sender,
+        address indexed recipient,
+        uint256 amount,
+        uint256 interval
+    );
+    event RecurringExecuted(uint256 indexed scheduleId, uint256 amount);
+    event RecurringCancelled(uint256 indexed scheduleId);
+    event FamilyMemberAdded(address indexed user, address wallet, string name);
+    event FamilyMemberRemoved(address indexed user, uint256 index);
 }
