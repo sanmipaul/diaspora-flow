@@ -20,6 +20,27 @@ const config: HardhatUserConfig = {
       chainId: 42220,
     },
   },
+  etherscan: {
+    apiKey: process.env.CELOSCAN_API_KEY ?? "",
+    customChains: [
+      {
+        network: "celo",
+        chainId: 42220,
+        urls: {
+          apiURL: "https://api.celoscan.io/api",
+          browserURL: "https://celoscan.io",
+        },
+      },
+      {
+        network: "alfajores",
+        chainId: 44787,
+        urls: {
+          apiURL: "https://api-alfajores.celoscan.io/api",
+          browserURL: "https://alfajores.celoscan.io",
+        },
+      },
+    ],
+  },
 };
 
 export default config;

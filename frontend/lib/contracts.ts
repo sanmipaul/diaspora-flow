@@ -4,7 +4,7 @@ export const CUSD_ADDRESS = {
 } as const;
 
 export const DIASPORA_FLOW_ADDRESS = {
-  42220: "" as `0x${string}`,
+  42220: "0x735983527295A6E15e7a9593ba52f3EE9aE648e3" as `0x${string}`,
   44787: "" as `0x${string}`,
 } as const;
 
