@@ -1,0 +1,20 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "DiasporaFlow Recurring Executor",
+  "description": "AI agent that automatically executes scheduled cross-border remittances on Celo. Eliminates missed payments by triggering recurring cUSD transfers when they become due — saving diaspora families from 8-9% traditional remittance fees.",
+  "image": "https://raw.githubusercontent.com/thewealthyplace/diaspora-flow/main/frontend/public/agent-icon.png",
+  "endpoints": [
+    {
+      "name": "A2A",
+      "endpoint": "https://diaspora-flow.vercel.app/api/agent-card",
+      "version": "0.3.0"
+    },
+    {
+      "name": "wallet",
+      "address": "REPLACE_WITH_AGENT_WALLET_ADDRESS",
+      "chainId": 42220
+    }
+  ],
+  "registrations": [],
+  "supportedTrust": ["reputation"]
+}

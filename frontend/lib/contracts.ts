@@ -104,6 +104,13 @@ export const DIASPORA_FLOW_ABI = [
     outputs: [{ name: "", type: "uint256[]" }],
   },
   {
+    name: "collectedFees",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
     name: "transfers",
     type: "function",
     stateMutability: "view",

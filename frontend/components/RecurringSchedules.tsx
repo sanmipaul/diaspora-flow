@@ -90,13 +90,18 @@ function ScheduleCard({ scheduleId, contractAddress, onCancel }: { scheduleId: b
   const amountDisplay = (Number(data[2]) / 1e18).toFixed(2);
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
-      <div>
-        <p className="font-medium text-gray-800">{data[6] || "Unnamed"}</p>
-        <p className="text-xs text-gray-400">{amountDisplay} cUSD</p>
-        <p className="text-xs text-gray-400">Next: {nextDate}</p>
+    <div className="bg-white rounded-2xl p-4 shadow-sm">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <p className="font-medium text-gray-800">{data[6] || "Unnamed"}</p>
+          <p className="text-xs text-gray-400">{amountDisplay} cUSD · Next: {nextDate}</p>
+        </div>
+        <button onClick={onCancel} className="text-xs text-red-400 ml-2">Cancel</button>
       </div>
-      <button onClick={onCancel} className="text-xs text-red-400">Cancel</button>
+      <div className="flex items-center gap-1.5 mt-1">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400" />
+        <span className="text-xs text-gray-400">Auto-executed by AI agent</span>
+      </div>
     </div>
   );
 }

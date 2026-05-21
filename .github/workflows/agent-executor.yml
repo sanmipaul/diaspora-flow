@@ -1,0 +1,44 @@
+name: DiasporaFlow Agent Executor
+
+on:
+  schedule:
+    # Runs every hour — checks for due recurring transfers
+    - cron: "0 * * * *"
+  workflow_dispatch:
+    # Allow manual trigger from GitHub Actions UI
+
+jobs:
+  execute:
+    name: Execute Due Recurring Transfers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: agent/package-lock.json
+
+      - name: Install agent dependencies
+        working-directory: agent
+        run: npm install
+
+      - name: Run recurring transfer executor
+        working-directory: agent
+        env:
+          AGENT_PRIVATE_KEY: ${{ secrets.AGENT_PRIVATE_KEY }}
+        run: npm run execute
+
+      - name: Upload execution log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: execution-log-${{ github.run_number }}
+          path: agent/*.log
+          if-no-files-found: ignore
+          retention-days: 7

@@ -53,7 +53,8 @@ function TransferRow({ transferId, contractAddress, userAddress }: { transferId:
 
   const isSent = data[0].toLowerCase() === userAddress.toLowerCase();
   const amount = Number(formatUnits(data[2], 18)).toFixed(2);
-  const date = new Date(Number(data[4]) * 1000).toLocaleDateString();
+  const date = new Date(Number(data[3]) * 1000).toLocaleDateString();
+  const memo = data[4] as string | undefined;
   const counterparty = isSent ? data[1] : data[0];
 
   return (
@@ -63,7 +64,7 @@ function TransferRow({ transferId, contractAddress, userAddress }: { transferId:
           {isSent ? "Sent to" : "Received from"}{" "}
           <span className="text-gray-500">{counterparty.slice(0, 6)}...{counterparty.slice(-4)}</span>
         </p>
-        {data[5] && <p className="text-xs text-gray-400">{data[5]}</p>}
+        {memo && <p className="text-xs text-gray-400">{memo}</p>}
         <p className="text-xs text-gray-400">{date}</p>
       </div>
       <p className={`font-semibold ${isSent ? "text-red-500" : "text-brand-600"}`}>

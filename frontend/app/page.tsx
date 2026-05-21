@@ -6,8 +6,9 @@ import SendForm from "@/components/SendForm";
 import FamilyProfiles from "@/components/FamilyProfiles";
 import RecurringSchedules from "@/components/RecurringSchedules";
 import TransactionHistory from "@/components/TransactionHistory";
+import Stats from "@/components/Stats";
 
-type Tab = "send" | "family" | "recurring" | "history";
+type Tab = "send" | "family" | "recurring" | "history" | "stats";
 
 export default function Home() {
   const { address, isConnected } = useAccount();
@@ -26,6 +27,7 @@ export default function Home() {
     { id: "family", label: "Family" },
     { id: "recurring", label: "Recurring" },
     { id: "history", label: "History" },
+    { id: "stats", label: "Stats" },
   ];
 
   return (
@@ -76,6 +78,7 @@ export default function Home() {
       {activeTab === "family" && <FamilyProfiles />}
       {activeTab === "recurring" && <RecurringSchedules />}
       {activeTab === "history" && <TransactionHistory />}
+      {activeTab === "stats" && <Stats />}
     </div>
   );
 }

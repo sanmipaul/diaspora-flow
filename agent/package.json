@@ -1,0 +1,21 @@
+{
+  "name": "diaspora-flow-agent",
+  "version": "1.0.0",
+  "description": "AI agent that auto-executes recurring remittances and holds ERC-8004 + Self Agent ID identity",
+  "type": "module",
+  "scripts": {
+    "execute": "tsx src/executor.ts",
+    "register:8004": "tsx src/register-8004.ts",
+    "check": "tsx src/check-registrations.ts"
+  },
+  "dependencies": {
+    "@selfxyz/agent-sdk": "^1.0.0",
+    "dotenv": "^16.4.5",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
