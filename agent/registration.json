@@ -11,7 +11,7 @@
     },
     {
       "name": "wallet",
-      "address": "REPLACE_WITH_AGENT_WALLET_ADDRESS",
+      "address": "0x96fbc86fCf4eAB5E94b7d74BE1f8D135E8b9BFC3",
       "chainId": 42220
     }
   ],
