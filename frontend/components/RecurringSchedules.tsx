@@ -88,13 +88,14 @@ function ScheduleCard({ scheduleId, contractAddress, onCancel }: { scheduleId: b
 
   const nextDate = new Date(Number(data[4]) * 1000).toLocaleDateString();
   const amountDisplay = (Number(data[2]) / 1e18).toFixed(2);
+  const recipient = `${data[1].slice(0, 6)}...${data[1].slice(-4)}`;
 
   return (
     <div className="bg-white rounded-2xl p-4 shadow-sm">
       <div className="flex items-start justify-between mb-2">
         <div>
           <p className="font-medium text-gray-800">{data[6] || "Unnamed"}</p>
-          <p className="text-xs text-gray-400">{amountDisplay} cUSD · Next: {nextDate}</p>
+          <p className="text-xs text-gray-400">{amountDisplay} cUSD → {recipient} · Next: {nextDate}</p>
         </div>
         <button onClick={onCancel} className="text-xs text-red-400 ml-2">Cancel</button>
       </div>
