@@ -23,7 +23,9 @@ export default function TransactionHistory() {
     args: address ? [address] : undefined,
   });
 
-  const allIds = [...(sentIds ?? []), ...(receivedIds ?? [])].filter((v, i, a) => a.indexOf(v) === i);
+  const allIds = [...(sentIds ?? []), ...(receivedIds ?? [])]
+    .filter((v, i, a) => a.indexOf(v) === i)
+    .sort((a, b) => (b > a ? 1 : -1));
 
   if (allIds.length === 0) {
     return (
