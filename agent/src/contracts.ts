@@ -8,7 +8,7 @@ export const CUSD_ADDRESS =
   "0x765DE816845861e75A25fCA122bb6898B8B1282a" as const;
 
 // Approximate Celo mainnet block where DiasporaFlow was deployed (May 2026)
-export const DEPLOY_FROM_BLOCK = 37800000n;
+export const DEPLOY_FROM_BLOCK = 66900000n;
 
 export const DIASPORA_FLOW_ABI = [
   {
