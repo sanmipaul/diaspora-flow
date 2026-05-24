@@ -1,18 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useChainId, useReadContract } from "wagmi";
+import { formatUnits } from "viem";
 import SendForm from "@/components/SendForm";
 import FamilyProfiles from "@/components/FamilyProfiles";
 import RecurringSchedules from "@/components/RecurringSchedules";
 import TransactionHistory from "@/components/TransactionHistory";
 import Stats from "@/components/Stats";
+import { CUSD_ADDRESS, ERC20_ABI } from "@/lib/contracts";
 
 type Tab = "send" | "family" | "recurring" | "history" | "stats";
 
 export default function Home() {
   const { address, isConnected } = useAccount();
+  const chainId = useChainId() as 42220 | 44787;
   const [activeTab, setActiveTab] = useState<Tab>("send");
+
+  const { data: cUsdBalance } = useReadContract({
+    address: CUSD_ADDRESS[chainId] as `0x${string}`,
+    abi: ERC20_ABI,
+    functionName: "balanceOf",
+    args: address ? [address] : undefined,
+  });
+  const formattedCusd = cUsdBalance !== undefined
+    ? Number(formatUnits(cUsdBalance, 18)).toFixed(2)
+    : "—";
 
   if (!isConnected) {
     return (
@@ -36,9 +49,12 @@ export default function Home() {
         <div className="flex items-center gap-2 mb-1">
           <span className="text-2xl font-bold text-brand-700">DiasporaFlow</span>
         </div>
-        <p className="text-xs text-gray-500">
-          {address?.slice(0, 6)}...{address?.slice(-4)}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-gray-500">
+            {address?.slice(0, 6)}...{address?.slice(-4)}
+          </p>
+          <p className="text-xs font-semibold text-brand-700">{formattedCusd} cUSD</p>
+        </div>
       </header>
 
       <div className="bg-brand-50 rounded-2xl p-4 mb-5 text-center">
