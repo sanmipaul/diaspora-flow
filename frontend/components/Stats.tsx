@@ -9,7 +9,7 @@ const TRANSFER_SENT_EVENT = parseAbiItem(
   "event TransferSent(uint256 indexed transferId, address indexed sender, address indexed recipient, uint256 amount, uint256 fee, string memo)"
 );
 
-const DEPLOY_FROM_BLOCK = 37800000n;
+const DEPLOY_FROM_BLOCK = 66900000n;
 
 // ERC-8004 Identity Registry on Celo mainnet
 const ERC8004_REGISTRY = "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432" as const;
