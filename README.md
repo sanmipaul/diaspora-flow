@@ -64,11 +64,12 @@ DiasporaFlow includes a registered on-chain AI agent that qualifies for the [Cel
 
 | Requirement | Implementation |
 |------------|----------------|
-| Registered with ERC-8004 | Identity Registry `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` |
+| Registered with ERC-8004 | **Agent ID #9145** — [view on 8004scan](https://8004scan.io/agents/celo/9145) |
+| Agent wallet | `0x96fbc86fCf4eAB5E94b7d74BE1f8D135E8b9BFC3` — [celoscan](https://celoscan.io/address/0x96fbc86fCf4eAB5E94b7d74BE1f8D135E8b9BFC3) |
 | Self Agent ID | Self Agent Registry `0xaC3DF9ABf80d0F5c020C06B04Cced27763355944` |
-| Agent wallet onchain activity | Executes `executeRecurring()` on DiasporaFlow contract |
+| Agent wallet onchain activity | Executes `executeRecurring()` on DiasporaFlow contract hourly |
 
-The agent runs on a GitHub Actions cron schedule (hourly) and can be verified at [8004scan.io](https://8004scan.io).
+The agent runs on a GitHub Actions cron schedule (hourly). Verify at [8004scan.io/agents/celo/9145](https://8004scan.io/agents/celo/9145).
 
 ## License
 
