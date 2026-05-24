@@ -81,19 +81,22 @@ async function checkSelfRegistration(address: Address): Promise<boolean> {
 
 // ── Schedule discovery ───────────────────────────────────────────────────────
 
+const CHUNK_SIZE = 500000n;
+
 async function getActiveScheduleIds(): Promise<Set<bigint>> {
-  const [scheduledLogs, cancelledLogs] = await Promise.all([
-    publicClient.getLogs({
-      address: DIASPORA_FLOW_ADDRESS,
-      event: RECURRING_SCHEDULED_EVENT,
-      fromBlock: DEPLOY_FROM_BLOCK,
-    }),
-    publicClient.getLogs({
-      address: DIASPORA_FLOW_ADDRESS,
-      event: RECURRING_CANCELLED_EVENT,
-      fromBlock: DEPLOY_FROM_BLOCK,
-    }),
-  ]);
+  const latest = await publicClient.getBlockNumber();
+  const scheduledLogs: Awaited<ReturnType<typeof publicClient.getLogs<typeof RECURRING_SCHEDULED_EVENT>>> = [];
+  const cancelledLogs: Awaited<ReturnType<typeof publicClient.getLogs<typeof RECURRING_CANCELLED_EVENT>>> = [];
+
+  for (let start = DEPLOY_FROM_BLOCK; start <= latest; start += CHUNK_SIZE) {
+    const toBlock = start + CHUNK_SIZE - 1n < latest ? start + CHUNK_SIZE - 1n : latest;
+    const [s, c] = await Promise.all([
+      publicClient.getLogs({ address: DIASPORA_FLOW_ADDRESS, event: RECURRING_SCHEDULED_EVENT, fromBlock: start, toBlock }),
+      publicClient.getLogs({ address: DIASPORA_FLOW_ADDRESS, event: RECURRING_CANCELLED_EVENT, fromBlock: start, toBlock }),
+    ]);
+    scheduledLogs.push(...s);
+    cancelledLogs.push(...c);
+  }
 
   const cancelled = new Set(
     cancelledLogs
