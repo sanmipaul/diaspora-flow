@@ -46,7 +46,7 @@ const SELF_ABI = [
 ] as const;
 
 // The agent wallet address — update this after running: cd agent && npm run register:8004
-const AGENT_WALLET = (process.env.NEXT_PUBLIC_AGENT_WALLET ?? "") as `0x${string}`;
+const AGENT_WALLET = "0x96fbc86fCf4eAB5E94b7d74BE1f8D135E8b9BFC3" as `0x${string}`;
 
 export default function Stats() {
   const chainId = useChainId() as 42220 | 44787;
