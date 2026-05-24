@@ -9,7 +9,6 @@
     "check": "tsx src/check-registrations.ts"
   },
   "dependencies": {
-    "@selfxyz/agent-sdk": "^1.0.0",
     "dotenv": "^16.4.5",
     "viem": "^2.21.0"
   },

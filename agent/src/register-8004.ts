@@ -31,7 +31,7 @@ dotenv.config();
 
 const REGISTRATION_JSON_PATH = path.resolve(
   new URL(".", import.meta.url).pathname,
-  "../../registration.json"
+  "../registration.json"
 );
 
 async function uploadToPinata(json: object): Promise<string> {
