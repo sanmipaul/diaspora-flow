@@ -11,6 +11,15 @@ const INTERVALS = [
   { label: "Monthly", seconds: 30 * 24 * 3600 },
 ];
 
+function formatInterval(seconds: bigint): string {
+  const s = Number(seconds);
+  if (s === 7 * 24 * 3600) return "Weekly";
+  if (s === 14 * 24 * 3600) return "Bi-weekly";
+  if (s === 30 * 24 * 3600) return "Monthly";
+  if (s < 86400) return `Every ${Math.floor(s / 3600)}h`;
+  return `Every ${Math.floor(s / 86400)}d`;
+}
+
 export default function RecurringSchedules() {
   const { address } = useAccount();
   const chainId = useChainId() as 42220 | 44787;
@@ -95,7 +104,7 @@ function ScheduleCard({ scheduleId, contractAddress, onCancel }: { scheduleId: b
       <div className="flex items-start justify-between mb-2">
         <div>
           <p className="font-medium text-gray-800">{data[6] || "Unnamed"}</p>
-          <p className="text-xs text-gray-400">{amountDisplay} cUSD → {recipient} · Next: {nextDate}</p>
+          <p className="text-xs text-gray-400">{amountDisplay} cUSD → {recipient} · {formatInterval(data[3])} · Next: {nextDate}</p>
         </div>
         <button onClick={onCancel} className="text-xs text-red-400 ml-2">Cancel</button>
       </div>
