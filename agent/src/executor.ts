@@ -190,12 +190,6 @@ async function main() {
   console.log(`ERC-8004     : ${has8004 ? "✓ registered" : "✗ not registered — run: npm run register:8004"}`);
   console.log(`Self Agent ID: ${hasSelf ? "✓ verified" : "✗ not registered — visit: https://app.ai.self.xyz"}`);
 
-  if (!has8004 || !hasSelf) {
-    console.log(
-      "\n⚠  Complete both registrations before the Proof of Ship deadline (May 25)."
-    );
-  }
-
   // Fetch agent CELO balance
   const celoBalance = await publicClient.getBalance({ address: account.address });
   console.log(`CELO balance : ${formatUnits(celoBalance, 18)} CELO`);
