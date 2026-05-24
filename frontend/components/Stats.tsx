@@ -75,13 +75,7 @@ export default function Stats() {
     query: { enabled: isMainnet && !!AGENT_WALLET },
   });
 
-  const { data: agentNftId } = useReadContract({
-    address: ERC8004_REGISTRY,
-    abi: ERC8004_ABI,
-    functionName: "tokenOfOwnerByIndex",
-    args: AGENT_WALLET ? [AGENT_WALLET, 0n] : undefined,
-    query: { enabled: isMainnet && !!AGENT_WALLET && (agentNftBalance ?? 0n) > 0n },
-  });
+  const AGENT_8004_ID = 9145n;
 
   // Agent Self Agent ID verification
   const { data: selfVerified } = useReadContract({
@@ -125,6 +119,7 @@ export default function Stats() {
   ];
 
   const agentRegistered = isMainnet && (agentNftBalance ?? 0n) > 0n;
+  const agentNftId = agentRegistered ? AGENT_8004_ID : undefined;
   const agentSelfVerified = isMainnet && selfVerified === true;
   const shortWallet = AGENT_WALLET
     ? `${AGENT_WALLET.slice(0, 6)}...${AGENT_WALLET.slice(-4)}`
