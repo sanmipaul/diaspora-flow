@@ -28,3 +28,13 @@ export function celoscanTx(hash: string): string {
 export function celoscanAddress(address: Address): string {
   return `https://celoscan.io/address/${address}`;
 }
+
+export function formatInterval(seconds: bigint): string {
+  const s = Number(seconds);
+  if (s === 7 * 24 * 3600) return "Weekly";
+  if (s === 14 * 24 * 3600) return "Bi-weekly";
+  if (s === 30 * 24 * 3600) return "Monthly";
+  if (s < 3600) return `Every ${Math.floor(s / 60)}m`;
+  if (s < 86400) return `Every ${Math.floor(s / 3600)}h`;
+  return `Every ${Math.floor(s / 86400)}d`;
+}
