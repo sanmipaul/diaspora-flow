@@ -7,6 +7,10 @@ on:
   workflow_dispatch:
     # Allow manual trigger from GitHub Actions UI
 
+concurrency:
+  group: agent-executor
+  cancel-in-progress: false
+
 jobs:
   execute:
     name: Execute Due Recurring Transfers
@@ -26,12 +30,20 @@ jobs:
 
       - name: Install agent dependencies
         working-directory: agent
-        run: npm install
+        run: npm ci
+
+      - name: Check agent registrations
+        working-directory: agent
+        env:
+          AGENT_PRIVATE_KEY: ${{ secrets.AGENT_PRIVATE_KEY }}
+        run: npm run check
+        continue-on-error: true
 
       - name: Run recurring transfer executor
         working-directory: agent
         env:
           AGENT_PRIVATE_KEY: ${{ secrets.AGENT_PRIVATE_KEY }}
+          AGENT_8004_ID: "9145"
         run: npm run execute
 
       - name: Upload execution log
