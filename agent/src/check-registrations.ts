@@ -37,21 +37,23 @@ async function check8004(address: Address) {
 
   if (balance === 0n) return { registered: false };
 
-  const agentId = await publicClient.readContract({
-    address: ERC8004_IDENTITY_REGISTRY,
-    abi: ERC8004_REGISTRY_ABI,
-    functionName: "tokenOfOwnerByIndex",
-    args: [address, 0n],
-  });
+  const agentIdFromEnv = process.env.AGENT_8004_ID
+    ? BigInt(process.env.AGENT_8004_ID)
+    : undefined;
 
-  const uri = await publicClient.readContract({
-    address: ERC8004_IDENTITY_REGISTRY,
-    abi: ERC8004_REGISTRY_ABI,
-    functionName: "tokenURI",
-    args: [agentId],
-  });
+  if (!agentIdFromEnv) return { registered: true };
 
-  return { registered: true, agentId, uri };
+  try {
+    const uri = await publicClient.readContract({
+      address: ERC8004_IDENTITY_REGISTRY,
+      abi: ERC8004_REGISTRY_ABI,
+      functionName: "tokenURI",
+      args: [agentIdFromEnv],
+    });
+    return { registered: true, agentId: agentIdFromEnv, uri };
+  } catch {
+    return { registered: true, agentId: agentIdFromEnv };
+  }
 }
 
 async function checkSelf(address: Address) {
