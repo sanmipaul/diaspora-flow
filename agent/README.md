@@ -6,12 +6,21 @@ On-chain AI agent registered with **ERC-8004** and **Self Agent ID** that automa
 
 Users can set up recurring cUSD transfers (weekly / bi-weekly / monthly) on the DiasporaFlow contract. Without the agent, these require manual execution. The agent watches the chain and fires `executeRecurring(scheduleId)` the moment a transfer becomes due — so families never miss a payment.
 
-## Registrations
+## Registered Agent
 
-| Registry | Address | Explorer |
-|----------|---------|---------|
-| ERC-8004 Identity Registry | `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` | [8004scan.io](https://8004scan.io) |
-| Self Agent Registry | `0xaC3DF9ABf80d0F5c020C06B04Cced27763355944` | [app.ai.self.xyz](https://app.ai.self.xyz) |
+| Property | Value |
+|----------|-------|
+| Agent wallet | `0x96fbc86fCf4eAB5E94b7d74BE1f8D135E8b9BFC3` |
+| ERC-8004 Agent ID | [#9145](https://8004scan.io/agents/celo/9145) |
+| Self Agent ID | pending — visit [app.ai.self.xyz](https://app.ai.self.xyz) |
+| Registration tx | [celoscan](https://celoscan.io/tx/0xba21e33f3bb6f37444b3ed7f086624f5f341af749491e2e9a99b95377665d714) |
+
+## Registries
+
+| Registry | Address |
+|----------|---------|
+| ERC-8004 Identity Registry | `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` |
+| Self Agent Registry | `0xaC3DF9ABf80d0F5c020C06B04Cced27763355944` |
 
 ## Setup
 
