@@ -28,11 +28,7 @@ export default function Home() {
     : "—";
 
   if (!isConnected) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500 text-sm">Opening in MiniPay...</p>
-      </div>
-    );
+    return <LandingPage />;
   }
 
   const tabs: { id: Tab; label: string }[] = [
@@ -95,6 +91,140 @@ export default function Home() {
       {activeTab === "recurring" && <RecurringSchedules />}
       {activeTab === "history" && <TransactionHistory />}
       {activeTab === "stats" && <Stats />}
+    </div>
+  );
+}
+
+function LandingPage() {
+  const features = [
+    { icon: "⚡", title: "Instant transfers", body: "Send cUSD to family in seconds — no banks, no delays." },
+    { icon: "🔁", title: "Recurring payments", body: "Schedule weekly or monthly remittances and let the agent handle execution." },
+    { icon: "🤖", title: "Autonomous AI agent", body: "ERC-8004 registered agent monitors the chain 24/7 and executes due transfers automatically." },
+    { icon: "🔒", title: "Non-custodial", body: "Your keys, your funds. The contract only moves money you explicitly approved." },
+    { icon: "👨‍👩‍👧", title: "Family profiles", body: "Save recipient wallets with names and relationships for one-tap sending." },
+    { icon: "📊", title: "Full history", body: "Every transfer and schedule is on-chain and visible in your personal dashboard." },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Nav */}
+      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
+        <span className="text-xl font-bold text-brand-700">DiasporaFlow</span>
+        <a
+          href="https://github.com/sanmipaul/diaspora-flow"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-gray-500 hover:text-brand-700 transition-colors"
+        >
+          GitHub
+        </a>
+      </nav>
+
+      {/* Hero */}
+      <section className="max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">
+        <span className="inline-block bg-brand-100 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
+          Built on Celo · Powered by cUSD
+        </span>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
+          Send money home —<br />
+          <span className="text-brand-600">fast, cheap, automatic.</span>
+        </h1>
+        <p className="text-lg text-gray-500 mb-8 max-w-xl mx-auto">
+          DiasporaFlow lets you send cUSD remittances and schedule recurring payments to family abroad.
+          An on-chain AI agent executes every transfer for you — no manual steps, no middlemen.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="https://minipay.opera.com/open_app?url=https://diaspora-flow.vercel.app"
+            className="bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-brand-700 transition-colors"
+          >
+            Open in MiniPay
+          </a>
+          <a
+            href="https://github.com/sanmipaul/diaspora-flow"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-gray-700 border border-gray-200 px-6 py-3 rounded-xl font-semibold text-sm hover:border-brand-400 transition-colors"
+          >
+            View on GitHub
+          </a>
+        </div>
+      </section>
+
+      {/* Fee comparison */}
+      <section className="max-w-sm mx-auto px-6 mb-12">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
+          <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-4">Fee comparison</p>
+          <div className="flex justify-around items-center">
+            <div>
+              <p className="text-4xl font-extrabold text-brand-600">0.3%</p>
+              <p className="text-xs text-gray-500 mt-1">DiasporaFlow</p>
+            </div>
+            <div className="text-gray-300 text-2xl font-light">vs</div>
+            <div>
+              <p className="text-4xl font-extrabold text-red-400">8–9%</p>
+              <p className="text-xs text-gray-500 mt-1">Traditional remittance</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="max-w-5xl mx-auto px-6 pb-16">
+        <h2 className="text-center text-2xl font-bold text-gray-800 mb-8">Everything you need to send money home</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {features.map((f) => (
+            <div key={f.title} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+              <div className="text-2xl mb-3">{f.icon}</div>
+              <h3 className="font-semibold text-gray-900 mb-1">{f.title}</h3>
+              <p className="text-sm text-gray-500">{f.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Agent badge */}
+      <section className="max-w-2xl mx-auto px-6 pb-20">
+        <div className="bg-brand-50 border border-brand-200 rounded-2xl p-6 text-center">
+          <p className="text-xs text-brand-700 font-semibold uppercase tracking-wide mb-2">Autonomous AI Agent</p>
+          <p className="text-sm text-gray-600 mb-3">
+            The DiasporaFlow agent is registered on ERC-8004 (Agent ID <strong>#9145</strong>) with a verified
+            Self Agent ID — it executes recurring transfers on-chain without any human trigger.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center text-xs">
+            <a
+              href="https://8004scan.io/agents/celo/9145"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-700 underline"
+            >
+              View agent on 8004scan
+            </a>
+            <span className="hidden sm:inline text-gray-300">·</span>
+            <a
+              href="https://celoscan.io/address/0x96fbc86fCf4eAB5E94b7d74BE1f8D135E8b9BFC3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-700 underline"
+            >
+              Agent wallet on Celoscan
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="text-center text-xs text-gray-400 pb-8">
+        Built for Celo Proof of Ship · Contract{" "}
+        <a
+          href="https://celoscan.io/address/0x735983527295A6E15e7a9593ba52f3EE9aE648e3"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          0x7359...648e3
+        </a>
+      </footer>
     </div>
   );
 }
