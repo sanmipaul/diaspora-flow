@@ -116,7 +116,7 @@ async function main() {
 
   const allGood = erc8004.registered && self.registered;
   if (allGood) {
-    console.log("✓ All AI Track requirements met — you qualify for the $250 pool!");
+    console.log("✓ All AI Track requirements met");
   } else {
     const missing = [
       !erc8004.registered && "ERC-8004",
@@ -124,8 +124,6 @@ async function main() {
     ]
       .filter(Boolean)
       .join(", ");
-    console.log(`⚠  Missing: ${missing}`);
-    console.log("   Complete these before May 25 to qualify for the AI Track.");
   }
 }
 

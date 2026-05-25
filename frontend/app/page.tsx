@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAccount, useChainId, useReadContract, useConnect } from "wagmi";
 import { formatUnits } from "viem";
 import SendForm from "@/components/SendForm";
@@ -12,10 +12,22 @@ import { CUSD_ADDRESS, ERC20_ABI } from "@/lib/contracts";
 
 type Tab = "send" | "family" | "recurring" | "history" | "stats";
 
+function useIsMiniPay() {
+  const [isMiniPay, setIsMiniPay] = useState(false);
+  useEffect(() => {
+    setIsMiniPay(
+      (window as unknown as { ethereum?: { isMiniPay?: boolean } }).ethereum
+        ?.isMiniPay === true
+    );
+  }, []);
+  return isMiniPay;
+}
+
 export default function Home() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId() as 42220 | 44787;
   const [activeTab, setActiveTab] = useState<Tab>("send");
+  const isMiniPay = useIsMiniPay();
 
   const { data: cUsdBalance } = useReadContract({
     address: CUSD_ADDRESS[chainId] as `0x${string}`,
@@ -28,6 +40,7 @@ export default function Home() {
     : "—";
 
   if (!isConnected) {
+    if (isMiniPay) return <MiniPayConnecting />;
     return <LandingPage />;
   }
 
@@ -91,6 +104,15 @@ export default function Home() {
       {activeTab === "recurring" && <RecurringSchedules />}
       {activeTab === "history" && <TransactionHistory />}
       {activeTab === "stats" && <Stats />}
+    </div>
+  );
+}
+
+function MiniPayConnecting() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gray-50">
+      <div className="w-10 h-10 rounded-full border-4 border-brand-200 border-t-brand-600 animate-spin" />
+      <p className="text-sm text-gray-500 font-medium">Connecting to MiniPay…</p>
     </div>
   );
 }
