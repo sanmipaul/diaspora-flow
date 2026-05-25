@@ -68,12 +68,13 @@ async function check8004Registration(address: Address): Promise<boolean> {
 
 async function checkSelfRegistration(address: Address): Promise<boolean> {
   try {
-    return await publicClient.readContract({
+    const balance = await publicClient.readContract({
       address: SELF_AGENT_REGISTRY,
       abi: SELF_REGISTRY_ABI,
-      functionName: "isVerifiedAgent",
+      functionName: "balanceOf",
       args: [address],
     });
+    return balance > 0n;
   } catch {
     return false;
   }

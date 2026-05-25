@@ -89,25 +89,18 @@ export const SELF_AGENT_REGISTRY =
 
 export const SELF_REGISTRY_ABI = [
   {
-    name: "isVerifiedAgent",
+    name: "balanceOf",
     type: "function",
     stateMutability: "view",
-    inputs: [{ name: "agentKey", type: "address" }],
-    outputs: [{ name: "", type: "bool" }],
-  },
-  {
-    name: "getAgentId",
-    type: "function",
-    stateMutability: "view",
-    inputs: [{ name: "agentKey", type: "address" }],
+    inputs: [{ name: "owner", type: "address" }],
     outputs: [{ name: "", type: "uint256" }],
   },
   {
-    name: "isProofFresh",
+    name: "name",
     type: "function",
     stateMutability: "view",
-    inputs: [{ name: "agentId", type: "uint256" }],
-    outputs: [{ name: "", type: "bool" }],
+    inputs: [],
+    outputs: [{ name: "", type: "string" }],
   },
 ] as const;
 

@@ -57,30 +57,15 @@ async function check8004(address: Address) {
 }
 
 async function checkSelf(address: Address) {
-  const isVerified = await publicClient.readContract({
+  const balance = await publicClient.readContract({
     address: SELF_AGENT_REGISTRY,
     abi: SELF_REGISTRY_ABI,
-    functionName: "isVerifiedAgent",
+    functionName: "balanceOf",
     args: [address],
   });
 
-  if (!isVerified) return { registered: false };
-
-  const agentId = await publicClient.readContract({
-    address: SELF_AGENT_REGISTRY,
-    abi: SELF_REGISTRY_ABI,
-    functionName: "getAgentId",
-    args: [address],
-  });
-
-  const proofFresh = await publicClient.readContract({
-    address: SELF_AGENT_REGISTRY,
-    abi: SELF_REGISTRY_ABI,
-    functionName: "isProofFresh",
-    args: [agentId],
-  });
-
-  return { registered: true, agentId, proofFresh };
+  if (balance === 0n) return { registered: false };
+  return { registered: true };
 }
 
 async function main() {
@@ -117,14 +102,14 @@ async function main() {
   // Self Agent ID
   if ("error" in self) {
     console.log("Self ID   : ⚠  Could not query registry (RPC issue?)");
-  } else if (self.registered && "agentId" in self) {
-    const freshLabel = "proofFresh" in self && self.proofFresh ? "proof fresh" : "proof expired — re-verify passport";
-    console.log(`Self ID   : ✓  Agent ID #${self.agentId}  (${freshLabel})`);
+  } else if (self.registered) {
+    console.log("Self ID   : ✓  NFT minted — SAID holder confirmed");
   } else {
     console.log("Self ID   : ✗  Not registered");
-    console.log("             Visit: https://app.ai.self.xyz");
-    console.log("             Scan your passport with the Self mobile app");
-    console.log(`             Use wallet: ${account.address}`);
+    console.log("             1. Download the Self app on your phone");
+    console.log("             2. Visit: https://app.ai.self.xyz");
+    console.log("             3. Scan your passport and bind to:");
+    console.log(`             ${account.address}`);
   }
 
   console.log();
