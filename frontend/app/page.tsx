@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount, useChainId, useReadContract } from "wagmi";
+import { useAccount, useChainId, useReadContract, useConnect } from "wagmi";
 import { formatUnits } from "viem";
 import SendForm from "@/components/SendForm";
 import FamilyProfiles from "@/components/FamilyProfiles";
@@ -96,6 +96,8 @@ export default function Home() {
 }
 
 function LandingPage() {
+  const { connect, connectors, isPending } = useConnect();
+
   const features = [
     { icon: "⚡", title: "Instant transfers", body: "Send cUSD to family in seconds — no banks, no delays." },
     { icon: "🔁", title: "Recurring payments", body: "Schedule weekly or monthly remittances and let the agent handle execution." },
@@ -134,12 +136,13 @@ function LandingPage() {
           An on-chain AI agent executes every transfer for you — no manual steps, no middlemen.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a
-            href="https://minipay.opera.com/open_app?url=https://diaspora-flow.vercel.app"
-            className="bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-brand-700 transition-colors"
+          <button
+            onClick={() => connectors[0] && connect({ connector: connectors[0] })}
+            disabled={isPending}
+            className="bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-brand-700 transition-colors disabled:opacity-60"
           >
-            Open in MiniPay
-          </a>
+            {isPending ? "Connecting…" : "Connect Wallet"}
+          </button>
           <a
             href="https://github.com/sanmipaul/diaspora-flow"
             target="_blank"

@@ -7,10 +7,14 @@ import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
-function AutoConnect() {
+function MiniPayAutoConnect() {
   const { connect, connectors } = useConnect();
   useEffect(() => {
-    if (connectors[0]) connect({ connector: connectors[0] });
+    // Only auto-connect inside MiniPay — detected by the injected ethereum provider
+    const isMiniPay =
+      typeof window !== "undefined" &&
+      (window as unknown as { ethereum?: { isMiniPay?: boolean } }).ethereum?.isMiniPay === true;
+    if (isMiniPay && connectors[0]) connect({ connector: connectors[0] });
   }, [connect, connectors]);
   return null;
 }
@@ -19,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <AutoConnect />
+        <MiniPayAutoConnect />
         {children}
       </QueryClientProvider>
     </WagmiProvider>
