@@ -37,11 +37,11 @@ const ERC8004_ABI = [
 const SELF_REGISTRY = "0xaC3DF9ABf80d0F5c020C06B04Cced27763355944" as const;
 const SELF_ABI = [
   {
-    name: "isVerifiedAgent",
+    name: "balanceOf",
     type: "function",
     stateMutability: "view",
-    inputs: [{ name: "agentKey", type: "address" }],
-    outputs: [{ name: "", type: "bool" }],
+    inputs: [{ name: "owner", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
   },
 ] as const;
 
@@ -77,11 +77,11 @@ export default function Stats() {
 
   const AGENT_8004_ID = 9145n;
 
-  // Agent Self Agent ID verification
-  const { data: selfVerified } = useReadContract({
+  // Agent Self Agent ID verification — SAID contract only exposes balanceOf
+  const { data: selfBalance } = useReadContract({
     address: SELF_REGISTRY,
     abi: SELF_ABI,
-    functionName: "isVerifiedAgent",
+    functionName: "balanceOf",
     args: AGENT_WALLET ? [AGENT_WALLET] : undefined,
     query: { enabled: isMainnet && !!AGENT_WALLET },
   });
@@ -120,7 +120,7 @@ export default function Stats() {
 
   const agentRegistered = isMainnet && (agentNftBalance ?? 0n) > 0n;
   const agentNftId = agentRegistered ? AGENT_8004_ID : undefined;
-  const agentSelfVerified = isMainnet && selfVerified === true;
+  const agentSelfVerified = isMainnet && (selfBalance ?? 0n) > 0n;
   const shortWallet = AGENT_WALLET
     ? `${AGENT_WALLET.slice(0, 6)}...${AGENT_WALLET.slice(-4)}`
     : "—";
