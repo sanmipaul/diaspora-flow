@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAccount, useChainId, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { toast } from "sonner";
 import { DIASPORA_FLOW_ADDRESS, DIASPORA_FLOW_ABI } from "@/lib/contracts";
 
 interface Props {
@@ -26,9 +27,12 @@ export default function FamilyProfiles({ onQuickSend }: Props) {
 
   const { writeContract: addMember, data: addTx } = useWriteContract();
   const { writeContract: removeMember } = useWriteContract();
-  const { isSuccess } = useWaitForTransactionReceipt({ hash: addTx });
+  const { isSuccess: addSuccess, isError: addError } = useWaitForTransactionReceipt({ hash: addTx });
 
-  if (isSuccess) refetch();
+  useEffect(() => {
+    if (addSuccess) { refetch(); toast.success("Family member added!"); }
+    if (addError) toast.error("Failed to add family member.");
+  }, [addSuccess, addError, refetch]);
 
   function handleAdd() {
     if (!wallet || !name || !contractAddress) return;
