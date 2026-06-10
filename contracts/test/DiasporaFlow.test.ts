@@ -142,4 +142,16 @@ describe("DiasporaFlow", function () {
       await expect(contract.connect(bob).cancelRecurring(0n)).to.be.revertedWith("Not owner");
     });
   });
+
+  describe("addFamilyMember() / removeFamilyMember()", () => {
+    it("adds a member with correct fields and emits FamilyMemberAdded", async () => {
+      await expect(contract.connect(alice).addFamilyMember(bob.address, "Bob", "Brother"))
+        .to.emit(contract, "FamilyMemberAdded")
+        .withArgs(alice.address, bob.address, "Bob");
+      const members = await contract.getFamilyMembers(alice.address);
+      expect(members.length).to.equal(1);
+      expect(members[0].name).to.equal("Bob");
+      expect(members[0].active).to.be.true;
+    });
+  });
 });
