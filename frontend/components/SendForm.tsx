@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAccount, useChainId, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
+import { toast } from "sonner";
 import { DIASPORA_FLOW_ADDRESS, DIASPORA_FLOW_ABI, CUSD_ADDRESS, ERC20_ABI } from "@/lib/contracts";
 
 interface Props {
@@ -37,6 +38,18 @@ export default function SendForm({ initialRecipient = "" }: Props) {
   const netAmount = parsedAmount ? parsedAmount - fee : 0n;
   const formattedBalance = balance ? Number(formatUnits(balance, 18)).toFixed(2) : "0.00";
   const hasAllowance = allowance !== undefined && allowance >= parsedAmount && parsedAmount > 0n;
+
+  useEffect(() => {
+    if (approveSuccess && step === "approving") {
+      refetchAllowance();
+      setStep("approved");
+      toast.success("Approval confirmed — ready to send!");
+    }
+    if (approveError && step === "approving") {
+      setStep("idle");
+      toast.error("Approval failed or was rejected.");
+    }
+  }, [approveSuccess, approveError, step, refetchAllowance]);
 
   function executeSend() {
     if (!contractAddress) return;
