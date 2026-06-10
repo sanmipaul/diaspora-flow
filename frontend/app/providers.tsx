@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, useConnect } from "wagmi";
 import { wagmiConfig } from "@/lib/wagmi";
 import { useEffect } from "react";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <MiniPayAutoConnect />
         {children}
+        <Toaster position="bottom-center" richColors closeButton />
       </QueryClientProvider>
     </WagmiProvider>
   );
