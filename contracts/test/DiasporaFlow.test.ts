@@ -161,5 +161,9 @@ describe("DiasporaFlow", function () {
         .withArgs(alice.address, 0n);
       expect((await contract.getFamilyMembers(alice.address))[0].active).to.be.false;
     });
+
+    it("removeFamilyMember() reverts on out-of-bounds index", async () => {
+      await expect(contract.connect(alice).removeFamilyMember(0n)).to.be.revertedWith("Invalid index");
+    });
   });
 });
