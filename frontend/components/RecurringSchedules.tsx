@@ -83,7 +83,10 @@ export default function RecurringSchedules() {
               </button>
             ))}
           </div>
-          <button onClick={handleCreate} className="w-full py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium">Create schedule</button>
+          <button onClick={handleCreate} disabled={!recipient || !amount}
+            className="w-full py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+            Create schedule
+          </button>
         </div>
       )}
 
