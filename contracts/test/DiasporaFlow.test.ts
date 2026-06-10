@@ -92,4 +92,39 @@ describe("DiasporaFlow", function () {
       ).to.be.revertedWith("Interval too short");
     });
   });
+
+  describe("executeRecurring()", () => {
+    const WEEKLY = BigInt(7 * 24 * 3600);
+
+    beforeEach(async () => {
+      await contract.connect(alice).scheduleRecurring(bob.address, ONE, WEEKLY, "weekly");
+      await cUSD.connect(alice).approve(await contract.getAddress(), ethers.MaxUint256);
+    });
+
+    it("executes transfer to recipient when due", async () => {
+      await time.increase(Number(WEEKLY) + 60);
+      const bobBefore = await cUSD.balanceOf(bob.address);
+      await contract.connect(agent).executeRecurring(0n);
+      const net = ONE - calcFee(ONE);
+      expect(await cUSD.balanceOf(bob.address) - bobBefore).to.equal(net);
+    });
+
+    it("advances nextExecution by one interval after run", async () => {
+      await time.increase(Number(WEEKLY) + 60);
+      await contract.connect(agent).executeRecurring(0n);
+      const s = await contract.schedules(0n);
+      const latest = await time.latest();
+      expect(s.nextExecution).to.be.approximately(BigInt(latest) + WEEKLY, 5n);
+    });
+
+    it("reverts when called before due time", async () => {
+      await expect(contract.connect(agent).executeRecurring(0n)).to.be.revertedWith("Too early");
+    });
+
+    it("reverts on cancelled schedule", async () => {
+      await contract.connect(alice).cancelRecurring(0n);
+      await time.increase(Number(WEEKLY) + 60);
+      await expect(contract.connect(agent).executeRecurring(0n)).to.be.revertedWith("Schedule inactive");
+    });
+  });
 });
