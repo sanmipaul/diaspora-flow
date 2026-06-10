@@ -58,5 +58,17 @@ describe("DiasporaFlow", function () {
       expect(receivedIds.length).to.equal(1);
       expect(sentIds[0]).to.equal(0n);
     });
+
+    it("reverts on zero amount", async () => {
+      await expect(contract.connect(alice).send(bob.address, 0n, "")).to.be.revertedWith("Amount must be > 0");
+    });
+
+    it("reverts on zero address recipient", async () => {
+      await expect(contract.connect(alice).send(ethers.ZeroAddress, ONE, "")).to.be.revertedWith("Invalid recipient");
+    });
+
+    it("reverts without ERC20 approval", async () => {
+      await expect(contract.connect(alice).send(bob.address, ONE, "")).to.be.reverted;
+    });
   });
 });
