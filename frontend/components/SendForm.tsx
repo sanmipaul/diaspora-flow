@@ -70,7 +70,7 @@ export default function SendForm({ initialRecipient = "" }: Props) {
 
   function handleSend() {
     if (!recipient || !parsedAmount || !contractAddress) return;
-    if (!allowance || allowance < parsedAmount) {
+    if (!hasAllowance) {
       setStep("approving");
       approve({ address: cUSD, abi: ERC20_ABI, functionName: "approve", args: [contractAddress, parsedAmount] });
       return;
@@ -78,7 +78,7 @@ export default function SendForm({ initialRecipient = "" }: Props) {
     executeSend();
   }
 
-  if (sendSuccess) {
+  if (step === "done") {
     return (
       <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
         <div className="text-4xl mb-3">✓</div>
@@ -139,12 +139,17 @@ export default function SendForm({ initialRecipient = "" }: Props) {
       {balance !== undefined && parsedAmount > 0n && parsedAmount > balance && (
         <p className="text-xs text-red-500 font-medium">Insufficient balance — you have {formattedBalance} cUSD</p>
       )}
-      <button onClick={handleSend} disabled={!recipient || !amount || !contractAddress || step === "approving" || step === "sending" || (balance !== undefined && parsedAmount > balance)}
-        className="w-full py-3 bg-brand-600 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
-        {step === "approving" ? "Approving..." : step === "sending" ? "Sending..." : allowance && allowance >= parsedAmount ? "Send" : "Approve & Send"}
-      </button>
-      {approveSuccess && step === "approving" && (
-        <button onClick={executeSend} className="w-full py-3 bg-brand-700 text-white rounded-xl font-semibold">Now send →</button>
+      {step === "approved" ? (
+        <button onClick={executeSend}
+          className="w-full py-3 bg-brand-700 text-white rounded-xl font-semibold">
+          Send {amount} cUSD →
+        </button>
+      ) : (
+        <button onClick={handleSend}
+          disabled={!recipient || !amount || !contractAddress || step === "approving" || step === "sending" || (balance !== undefined && parsedAmount > 0n && parsedAmount > balance)}
+          className="w-full py-3 bg-brand-600 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+          {step === "approving" ? "Step 1 of 2 — Approving…" : step === "sending" ? "Step 2 of 2 — Sending…" : hasAllowance ? "Send" : "Approve & Send"}
+        </button>
       )}
     </div>
   );
