@@ -26,7 +26,12 @@ export default function FamilyProfiles({ onQuickSend }: Props) {
   });
 
   const { writeContract: addMember, data: addTx } = useWriteContract();
-  const { writeContract: removeMember } = useWriteContract();
+  const { writeContract: removeMember, data: removeTx } = useWriteContract();
+  const { isSuccess: removeSuccess } = useWaitForTransactionReceipt({ hash: removeTx });
+
+  useEffect(() => {
+    if (removeSuccess) { refetch(); toast.success("Family member removed."); }
+  }, [removeSuccess, refetch]);
   const { isSuccess: addSuccess, isError: addError } = useWaitForTransactionReceipt({ hash: addTx });
 
   useEffect(() => {
