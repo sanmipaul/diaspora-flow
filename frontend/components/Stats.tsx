@@ -158,6 +158,18 @@ export default function Stats() {
         </p>
       </div>
 
+      {isMainnet && agentLowGas && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 flex items-start gap-2">
+          <span className="text-amber-500 text-base mt-0.5">⚠</span>
+          <div>
+            <p className="text-xs font-semibold text-amber-700">Agent wallet low on gas</p>
+            <p className="text-xs text-amber-600 mt-0.5">
+              Balance: {agentCeloValue?.toFixed(4)} CELO — top up to keep recurring transfers executing.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* AI Agent Section */}
       <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
@@ -208,6 +220,11 @@ export default function Stats() {
                 : "Not verified"
             }
             ok={agentSelfVerified}
+          />
+          <AgentRow
+            label="Gas balance"
+            value={agentCeloValue === null ? "..." : `${agentCeloValue.toFixed(4)} CELO${agentLowGas ? " ⚠" : ""}`}
+            ok={!agentLowGas && agentCeloValue !== null}
           />
         </div>
       </div>
