@@ -71,4 +71,25 @@ describe("DiasporaFlow", function () {
       await expect(contract.connect(alice).send(bob.address, ONE, "")).to.be.reverted;
     });
   });
+
+  describe("scheduleRecurring()", () => {
+    const WEEKLY = BigInt(7 * 24 * 3600);
+
+    it("stores schedule and emits RecurringScheduled", async () => {
+      await expect(contract.connect(alice).scheduleRecurring(bob.address, ONE, WEEKLY, "Mum"))
+        .to.emit(contract, "RecurringScheduled")
+        .withArgs(0n, alice.address, bob.address, ONE, WEEKLY);
+      const ids = await contract.getUserSchedules(alice.address);
+      expect(ids.length).to.equal(1);
+      const s = await contract.schedules(0n);
+      expect(s.active).to.be.true;
+      expect(s.label).to.equal("Mum");
+    });
+
+    it("reverts when interval is below 1 day", async () => {
+      await expect(
+        contract.connect(alice).scheduleRecurring(bob.address, ONE, BigInt(3600), "")
+      ).to.be.revertedWith("Interval too short");
+    });
+  });
 });
