@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePublicClient, useReadContract, useChainId } from "wagmi";
+import { usePublicClient, useReadContract, useBalance, useChainId } from "wagmi";
 import { parseAbiItem, formatUnits } from "viem";
 import { DIASPORA_FLOW_ADDRESS, DIASPORA_FLOW_ABI } from "@/lib/contracts";
 
@@ -76,6 +76,14 @@ export default function Stats() {
   });
 
   const AGENT_8004_ID = 9145n;
+
+  // Agent wallet CELO gas balance — warn when low
+  const { data: agentCeloBalance } = useBalance({
+    address: AGENT_WALLET,
+    query: { enabled: isMainnet && !!AGENT_WALLET },
+  });
+  const agentCeloValue = agentCeloBalance ? Number(agentCeloBalance.formatted) : null;
+  const agentLowGas = agentCeloValue !== null && agentCeloValue < 0.01;
 
   // Agent Self Agent ID verification — SAID contract only exposes balanceOf
   const { data: selfBalance } = useReadContract({
