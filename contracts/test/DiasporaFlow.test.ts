@@ -127,4 +127,14 @@ describe("DiasporaFlow", function () {
       await expect(contract.connect(agent).executeRecurring(0n)).to.be.revertedWith("Schedule inactive");
     });
   });
+
+  describe("cancelRecurring()", () => {
+    it("marks schedule inactive and emits RecurringCancelled", async () => {
+      await contract.connect(alice).scheduleRecurring(bob.address, ONE, BigInt(86400), "daily");
+      await expect(contract.connect(alice).cancelRecurring(0n))
+        .to.emit(contract, "RecurringCancelled")
+        .withArgs(0n);
+      expect((await contract.schedules(0n)).active).to.be.false;
+    });
+  });
 });
