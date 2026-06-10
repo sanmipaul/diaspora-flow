@@ -19,23 +19,24 @@ export default function SendForm({ initialRecipient = "" }: Props) {
   }, [initialRecipient]);
   const [amount, setAmount] = useState("");
   const [memo, setMemo] = useState("");
-  const [step, setStep] = useState<"idle" | "approving" | "sending" | "done">("idle");
+  const [step, setStep] = useState<"idle" | "approving" | "approved" | "sending" | "done">("idle");
 
   const contractAddress = DIASPORA_FLOW_ADDRESS[chainId];
   const cUSD = CUSD_ADDRESS[chainId] as `0x${string}`;
 
   const { data: balance } = useReadContract({ address: cUSD, abi: ERC20_ABI, functionName: "balanceOf", args: address ? [address] : undefined });
-  const { data: allowance } = useReadContract({ address: cUSD, abi: ERC20_ABI, functionName: "allowance", args: address && contractAddress ? [address, contractAddress] : undefined });
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({ address: cUSD, abi: ERC20_ABI, functionName: "allowance", args: address && contractAddress ? [address, contractAddress] : undefined });
 
   const { writeContract: approve, data: approveTx } = useWriteContract();
   const { writeContract: send, data: sendTx } = useWriteContract();
-  const { isSuccess: approveSuccess } = useWaitForTransactionReceipt({ hash: approveTx });
-  const { isSuccess: sendSuccess } = useWaitForTransactionReceipt({ hash: sendTx });
+  const { isSuccess: approveSuccess, isError: approveError } = useWaitForTransactionReceipt({ hash: approveTx });
+  const { isSuccess: sendSuccess, isError: sendError } = useWaitForTransactionReceipt({ hash: sendTx });
 
   const parsedAmount = amount ? parseUnits(amount, 18) : 0n;
   const fee = parsedAmount ? (parsedAmount * 30n) / 10000n : 0n;
   const netAmount = parsedAmount ? parsedAmount - fee : 0n;
   const formattedBalance = balance ? Number(formatUnits(balance, 18)).toFixed(2) : "0.00";
+  const hasAllowance = allowance !== undefined && allowance >= parsedAmount && parsedAmount > 0n;
 
   function executeSend() {
     if (!contractAddress) return;
