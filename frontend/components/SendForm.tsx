@@ -72,6 +72,25 @@ export default function SendForm({ initialRecipient = "" }: Props) {
         <span>Available balance</span>
         <span className="font-medium text-gray-800">{formattedBalance} cUSD</span>
       </div>
+
+      {(step === "approving" || step === "approved" || step === "sending") && (
+        <div className="flex items-center gap-2 bg-brand-50 rounded-xl px-3 py-2">
+          <div className={`flex items-center gap-1.5 text-xs font-medium ${step === "approving" ? "text-brand-700" : "text-brand-500"}`}>
+            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold ${step === "approved" || step === "sending" ? "bg-brand-600" : "bg-brand-400"}`}>
+              {step === "approved" || step === "sending" ? "✓" : "1"}
+            </span>
+            Approve
+          </div>
+          <div className="flex-1 h-px bg-brand-200" />
+          <div className={`flex items-center gap-1.5 text-xs font-medium ${step === "sending" ? "text-brand-700" : "text-gray-400"}`}>
+            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold ${step === "sending" ? "bg-brand-400" : "bg-gray-300"}`}>
+              2
+            </span>
+            Send
+          </div>
+        </div>
+      )}
+
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Recipient address</label>
         <input value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="0x..."
