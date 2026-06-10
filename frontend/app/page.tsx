@@ -106,8 +106,8 @@ export default function Home() {
         ))}
       </nav>
 
-      {activeTab === "send" && <SendForm />}
-      {activeTab === "family" && <FamilyProfiles />}
+      {activeTab === "send" && <SendForm initialRecipient={quickSendRecipient} />}
+      {activeTab === "family" && <FamilyProfiles onQuickSend={handleQuickSend} />}
       {activeTab === "recurring" && <RecurringSchedules />}
       {activeTab === "history" && <TransactionHistory />}
       {activeTab === "stats" && <Stats />}
