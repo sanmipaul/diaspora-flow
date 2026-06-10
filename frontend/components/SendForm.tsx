@@ -51,6 +51,17 @@ export default function SendForm({ initialRecipient = "" }: Props) {
     }
   }, [approveSuccess, approveError, step, refetchAllowance]);
 
+  useEffect(() => {
+    if (sendSuccess) {
+      setStep("done");
+      toast.success(`${Number(formatUnits(netAmount, 18)).toFixed(2)} cUSD sent successfully!`);
+    }
+    if (sendError && step === "sending") {
+      setStep(hasAllowance ? "approved" : "idle");
+      toast.error("Transaction failed or was rejected.");
+    }
+  }, [sendSuccess, sendError, step, netAmount, hasAllowance]);
+
   function executeSend() {
     if (!contractAddress) return;
     setStep("sending");
