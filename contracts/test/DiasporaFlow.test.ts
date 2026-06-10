@@ -48,5 +48,15 @@ describe("DiasporaFlow", function () {
         .to.emit(contract, "TransferSent")
         .withArgs(0n, alice.address, bob.address, net, fee, "Rent");
     });
+
+    it("records transferId in sent and received mappings", async () => {
+      await cUSD.connect(alice).approve(await contract.getAddress(), ONE);
+      await contract.connect(alice).send(bob.address, ONE, "");
+      const sentIds = await contract.getSentTransfers(alice.address);
+      const receivedIds = await contract.getReceivedTransfers(bob.address);
+      expect(sentIds.length).to.equal(1);
+      expect(receivedIds.length).to.equal(1);
+      expect(sentIds[0]).to.equal(0n);
+    });
   });
 });
