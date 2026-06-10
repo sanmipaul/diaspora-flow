@@ -56,6 +56,7 @@ export default function RecurringSchedules() {
   function handleCreate() {
     if (!recipient || !amount || !contractAddress) return;
     setAdding(false);
+    setRecipient(""); setAmount(""); setLabel("");
     schedule({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "scheduleRecurring", args: [recipient as `0x${string}`, parseUnits(amount, 18), BigInt(INTERVALS[intervalIdx].seconds), label] });
   }
 
