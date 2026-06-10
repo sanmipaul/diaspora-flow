@@ -43,6 +43,7 @@ export default function FamilyProfiles({ onQuickSend }: Props) {
     if (!wallet || !name || !contractAddress) return;
     setAdding(false);
     addMember({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "addFamilyMember", args: [wallet as `0x${string}`, name, relation] });
+    setWallet(""); setName(""); setRelation("");
   }
 
   const active = members?.filter((m) => m.active) ?? [];
