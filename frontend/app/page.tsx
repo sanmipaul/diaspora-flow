@@ -29,6 +29,13 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("send");
   const isMiniPay = useIsMiniPay();
 
+  const [quickSendRecipient, setQuickSendRecipient] = useState("");
+
+  function handleQuickSend(wallet: string) {
+    setQuickSendRecipient(wallet);
+    setActiveTab("send");
+  }
+
   const { data: cUsdBalance } = useReadContract({
     address: CUSD_ADDRESS[chainId] as `0x${string}`,
     abi: ERC20_ABI,
