@@ -153,5 +153,13 @@ describe("DiasporaFlow", function () {
       expect(members[0].name).to.equal("Bob");
       expect(members[0].active).to.be.true;
     });
+
+    it("removeFamilyMember() soft-deletes by setting active to false", async () => {
+      await contract.connect(alice).addFamilyMember(bob.address, "Bob", "Brother");
+      await expect(contract.connect(alice).removeFamilyMember(0n))
+        .to.emit(contract, "FamilyMemberRemoved")
+        .withArgs(alice.address, 0n);
+      expect((await contract.getFamilyMembers(alice.address))[0].active).to.be.false;
+    });
   });
 });
