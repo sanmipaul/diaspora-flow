@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useAccount, useChainId, useReadContract, useWriteContract } from "wagmi";
+import { useState, useEffect } from "react";
+import { useAccount, useChainId, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { toast } from "sonner";
 import { parseUnits } from "viem";
 import { DIASPORA_FLOW_ADDRESS, DIASPORA_FLOW_ABI } from "@/lib/contracts";
 
@@ -30,15 +31,27 @@ export default function RecurringSchedules() {
   const [label, setLabel] = useState("");
   const [intervalIdx, setIntervalIdx] = useState(2);
 
-  const { data: scheduleIds } = useReadContract({
+  const { data: scheduleIds, refetch } = useReadContract({
     address: contractAddress || undefined,
     abi: DIASPORA_FLOW_ABI,
     functionName: "getUserSchedules",
     args: address ? [address] : undefined,
   });
 
-  const { writeContract: schedule } = useWriteContract();
-  const { writeContract: cancel } = useWriteContract();
+  const { writeContract: schedule, data: scheduleTx } = useWriteContract();
+  const { writeContract: cancel, data: cancelTx } = useWriteContract();
+  const { isSuccess: scheduleSuccess, isError: scheduleError } = useWaitForTransactionReceipt({ hash: scheduleTx });
+  const { isSuccess: cancelSuccess, isError: cancelError } = useWaitForTransactionReceipt({ hash: cancelTx });
+
+  useEffect(() => {
+    if (scheduleSuccess) { refetch(); toast.success("Recurring schedule created!"); }
+    if (scheduleError) toast.error("Failed to create schedule.");
+  }, [scheduleSuccess, scheduleError, refetch]);
+
+  useEffect(() => {
+    if (cancelSuccess) { refetch(); toast.success("Schedule cancelled."); }
+    if (cancelError) toast.error("Failed to cancel schedule.");
+  }, [cancelSuccess, cancelError, refetch]);
 
   function handleCreate() {
     if (!recipient || !amount || !contractAddress) return;
