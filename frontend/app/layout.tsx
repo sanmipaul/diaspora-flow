@@ -11,6 +11,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "DiasporaFlow",
   description: "Send money home — fast, cheap, direct.",
+  icons: { icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💸</text></svg>" },
   other: {
     "talentapp:project_verification": "4ec4db067cdc951ab6f851b28f473e702462607c9b760ab26aed3538d901afcee74321804fa17338fe90bbb0a0b9affedaa69e5aafea9a544e5d8bc75feb4367",
   },
