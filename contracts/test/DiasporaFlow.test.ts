@@ -136,5 +136,10 @@ describe("DiasporaFlow", function () {
         .withArgs(0n);
       expect((await contract.schedules(0n)).active).to.be.false;
     });
+
+    it("reverts when caller is not the schedule owner", async () => {
+      await contract.connect(alice).scheduleRecurring(bob.address, ONE, BigInt(86400), "daily");
+      await expect(contract.connect(bob).cancelRecurring(0n)).to.be.revertedWith("Not owner");
+    });
   });
 });
