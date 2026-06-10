@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useAccount, useChainId, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { DIASPORA_FLOW_ADDRESS, DIASPORA_FLOW_ABI } from "@/lib/contracts";
 
-export default function FamilyProfiles() {
+interface Props {
+  onQuickSend?: (wallet: string) => void;
+}
+
+export default function FamilyProfiles({ onQuickSend }: Props) {
   const { address } = useAccount();
   const chainId = useChainId() as 42220 | 44787;
   const contractAddress = DIASPORA_FLOW_ADDRESS[chainId];
@@ -58,14 +62,24 @@ export default function FamilyProfiles() {
       )}
 
       {active.map((m, i) => (
-        <div key={i} className="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="font-medium text-gray-800">{m.name}</p>
-            <p className="text-xs text-gray-400">{m.relation}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{m.wallet.slice(0, 8)}...{m.wallet.slice(-6)}</p>
+        <div key={i} className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium text-gray-800">{m.name}</p>
+              <p className="text-xs text-gray-400">{m.relation}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{m.wallet.slice(0, 8)}...{m.wallet.slice(-6)}</p>
+            </div>
+            <div className="flex flex-col gap-1.5 items-end">
+              {onQuickSend && (
+                <button onClick={() => onQuickSend(m.wallet)}
+                  className="text-xs bg-brand-600 text-white px-3 py-1.5 rounded-lg font-medium">
+                  Send
+                </button>
+              )}
+              <button onClick={() => contractAddress && removeMember({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "removeFamilyMember", args: [BigInt(i)] })}
+                className="text-xs text-red-400">Remove</button>
+            </div>
           </div>
-          <button onClick={() => contractAddress && removeMember({ address: contractAddress, abi: DIASPORA_FLOW_ABI, functionName: "removeFamilyMember", args: [BigInt(i)] })}
-            className="text-xs text-red-400">Remove</button>
         </div>
       ))}
     </div>
