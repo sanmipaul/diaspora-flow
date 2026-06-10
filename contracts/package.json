@@ -5,7 +5,8 @@
     "compile": "hardhat compile",
     "test": "hardhat test",
     "deploy:alfajores": "hardhat run scripts/deploy.ts --network alfajores",
-    "deploy:celo": "hardhat run scripts/deploy.ts --network celo"
+    "deploy:celo": "hardhat run scripts/deploy.ts --network celo",
+    "verify:celo": "hardhat run scripts/verify.ts --network celo"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
