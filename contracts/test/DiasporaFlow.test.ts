@@ -166,4 +166,20 @@ describe("DiasporaFlow", function () {
       await expect(contract.connect(alice).removeFamilyMember(0n)).to.be.revertedWith("Invalid index");
     });
   });
+
+  describe("withdrawFees()", () => {
+    it("transfers all collected fees to owner and resets counter", async () => {
+      await cUSD.connect(alice).approve(await contract.getAddress(), ONE);
+      await contract.connect(alice).send(bob.address, ONE, "");
+      const fee = calcFee(ONE);
+      const ownerBefore = await cUSD.balanceOf(owner.address);
+      await contract.connect(owner).withdrawFees();
+      expect(await cUSD.balanceOf(owner.address) - ownerBefore).to.equal(fee);
+      expect(await contract.collectedFees()).to.equal(0n);
+    });
+
+    it("reverts when called by non-owner", async () => {
+      await expect(contract.connect(alice).withdrawFees()).to.be.reverted;
+    });
+  });
 });
