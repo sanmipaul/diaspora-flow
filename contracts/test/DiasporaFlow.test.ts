@@ -39,5 +39,14 @@ describe("DiasporaFlow", function () {
       expect(await cUSD.balanceOf(bob.address)).to.equal(net);
       expect(await contract.collectedFees()).to.equal(fee);
     });
+
+    it("emits TransferSent with correct arguments", async () => {
+      const fee = calcFee(ONE);
+      const net = ONE - fee;
+      await cUSD.connect(alice).approve(await contract.getAddress(), ONE);
+      await expect(contract.connect(alice).send(bob.address, ONE, "Rent"))
+        .to.emit(contract, "TransferSent")
+        .withArgs(0n, alice.address, bob.address, net, fee, "Rent");
+    });
   });
 });
