@@ -29,4 +29,15 @@ describe("DiasporaFlow", function () {
     contract = (await Factory.deploy(await cUSD.getAddress())) as DiasporaFlow;
     await cUSD.mint(alice.address, HUNDRED);
   });
+
+  describe("send()", () => {
+    it("transfers net amount to recipient and collects fee", async () => {
+      const fee = calcFee(ONE);
+      const net = ONE - fee;
+      await cUSD.connect(alice).approve(await contract.getAddress(), ONE);
+      await contract.connect(alice).send(bob.address, ONE, "School fees");
+      expect(await cUSD.balanceOf(bob.address)).to.equal(net);
+      expect(await contract.collectedFees()).to.equal(fee);
+    });
+  });
 });
