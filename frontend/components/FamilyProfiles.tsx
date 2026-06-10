@@ -63,7 +63,10 @@ export default function FamilyProfiles({ onQuickSend }: Props) {
             className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
           <input value={relation} onChange={(e) => setRelation(e.target.value)} placeholder="Relation (e.g. Mother)"
             className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
-          <button onClick={handleAdd} className="w-full py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium">Save family member</button>
+          <button onClick={handleAdd} disabled={!wallet || !name}
+            className="w-full py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+            Save family member
+          </button>
         </div>
       )}
 
