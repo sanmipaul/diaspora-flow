@@ -1,14 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAccount, useChainId, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
 import { DIASPORA_FLOW_ADDRESS, DIASPORA_FLOW_ABI, CUSD_ADDRESS, ERC20_ABI } from "@/lib/contracts";
 
-export default function SendForm() {
+interface Props {
+  initialRecipient?: string;
+}
+
+export default function SendForm({ initialRecipient = "" }: Props) {
   const { address } = useAccount();
   const chainId = useChainId() as 42220 | 44787;
-  const [recipient, setRecipient] = useState("");
+  const [recipient, setRecipient] = useState(initialRecipient);
+
+  useEffect(() => {
+    if (initialRecipient) setRecipient(initialRecipient);
+  }, [initialRecipient]);
   const [amount, setAmount] = useState("");
   const [memo, setMemo] = useState("");
   const [step, setStep] = useState<"idle" | "approving" | "sending" | "done">("idle");
